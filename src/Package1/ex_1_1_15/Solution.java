@@ -7,6 +7,7 @@ public class Solution {
 
     public static void main(String[] args) {
         System.out.println("Exercise 1");
+        // place another one sout
 
     }
 }
