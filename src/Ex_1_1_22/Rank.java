@@ -24,7 +24,10 @@ public class Rank {
     {   // Index of key in a[], if present, is not smaller than lo
         // and not larger than hi.
         depth++;
-        System.out.println("lo: " + lo + "  hi: " + hi + "  " + depth);
+        for (int i = 0; i <= depth; i++) {
+            System.out.print(" ");
+        }
+        System.out.println("lo: " + lo + "  hi: " + hi);
         if (lo > hi) return -1;
         int mid = lo + (hi - lo) / 2;
         if      (key < a[mid]) return rank(key, a, lo, mid - 1, depth);
