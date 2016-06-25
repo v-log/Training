@@ -15,7 +15,7 @@ between 0 and M–1 , the sum of the values in the returned array should be equa
 a.length.
  */
 
-public class Class {
+public class Histogram {
 
 //    public static void main(String[] args) {
 //        int[] array = {0, 1, 2, 3, 4, 5, 6, 0, 2, 4, 6, 8, 8, 8, 8, 8};
@@ -26,24 +26,9 @@ public class Class {
     public static int[] histogram (int[] a, int M) {
 
         int[] retArray = new int[M];
-        Map<Integer, Integer> tempMap = new HashMap<>();
+        for (int i : retArray) i = 0;
 
-        for (int num: a) {
-            if (tempMap.containsKey(num)) {
-                int temp = tempMap.get(num);
-                temp++;
-                tempMap.put(num, temp);
-            }
-            else tempMap.put(num, 1);
-        }
-
-        for (int i = 0; i < M; i++) {
-            if (tempMap.containsKey(i)) {
-                retArray[i] = tempMap.get(i);
-            }
-            else retArray[i] = 0;
-        }
-
+        for(int num : a) retArray[num]++;
 
         return retArray;
     }
