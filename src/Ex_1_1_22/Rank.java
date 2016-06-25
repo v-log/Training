@@ -12,10 +12,10 @@ to the recursive method that keeps track of the depth.
  */
 
 public class Rank {
-//    public static void main(String[] args) {
-//        int[] array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-//        System.out.println("rank = " + rank(4, array));
-//    }
+    public static void main(String[] args) {
+        int[] array = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+        System.out.println("rank = " + rank(4, array));
+    }
 
     public static int rank(int key, int[] a)
     {   return rank(key, a, 0, a.length - 1, 0);   }
@@ -24,7 +24,7 @@ public class Rank {
     {   // Index of key in a[], if present, is not smaller than lo
         // and not larger than hi.
         depth++;
-        System.out.println(depth + ".  lo: " + lo + "  hi: " + hi);
+        System.out.println("lo: " + lo + "  hi: " + hi + "  " + depth);
         if (lo > hi) return -1;
         int mid = lo + (hi - lo) / 2;
         if      (key < a[mid]) return rank(key, a, lo, mid - 1, depth);
