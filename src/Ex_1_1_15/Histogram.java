@@ -23,9 +23,9 @@ public class Histogram {
         for (int a : resAr) System.out.println(a);
     }
 
-    public static int[] histogram (int[] a, int M) {
+    public static int[] histogram (int[] a, int m) {
 
-        int[] retArray = new int[M];
+        int[] retArray = new int[m];
 
         for(int num : a) retArray[num]++;
 
