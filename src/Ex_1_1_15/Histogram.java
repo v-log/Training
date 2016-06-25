@@ -1,7 +1,5 @@
 package Ex_1_1_15;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by vl on 23.06.16.
@@ -17,15 +15,15 @@ a.length.
 
 public class Histogram {
 
-    public static void main(String[] args) {
-        int[] array = {0, 1, 2, 3, 4, 5, 6, 0, 2, 4, 6, 8, 8, 8, 8, 8};
-        int[] resAr = histogram(array, 10);
-        for (int a : resAr) System.out.println(a);
-    }
+//    public static void main(String[] args) {
+//        int[] array = {0, 1, 2, 3, 4, 5, 6, 0, 2, 4, 6, 8, 8, 8, 8, 8};
+//        int[] resAr = histogram(array, 10);
+//        for (int a : resAr) System.out.println(a);
+//    }
 
-    public static int[] histogram (int[] a, int m) {
+    public static int[] histogram (int[] a, int M) {
 
-        int[] retArray = new int[m];
+        int[] retArray = new int[M];
 
         for(int num : a) retArray[num]++;
 
