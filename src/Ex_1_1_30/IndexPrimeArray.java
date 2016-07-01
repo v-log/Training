@@ -46,7 +46,7 @@ public class IndexPrimeArray {
     {   // создание boolean массива
         boolean[][] resArray = new boolean[arSize][arSize];
         for (int i = 0; i < arSize; i++) {
-            resArray[i][i] = (i <= 1);
+            resArray[i][i] = false;
             for (int j = 0; j < i; j++) {
                 resArray[i][j] = resArray [j][i]= (gcd(i, j) <= 1);
             }
