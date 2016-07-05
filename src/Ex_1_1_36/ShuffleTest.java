@@ -20,9 +20,18 @@ should be close to N/M.
 public class ShuffleTest {
 
     public static void main(String[] args) throws IOException {
-        int m = Integer.parseInt(args[0]);
-        int n = Integer.parseInt(args[1]);
-        shuffleTest(m, n);
+        try {
+            int m = Integer.parseInt(args[0]);
+            int n = Integer.parseInt(args[1]);
+            shuffleTest(m, n);
+        }
+        catch (NumberFormatException e1) {
+            System.out.println("Необходимо ввести целые числа");
+        }
+        catch (ArrayIndexOutOfBoundsException e2) {
+            System.out.println("Необходимо ввести два целых числа через пробел");
+        }
+
     }
 
     public static void shuffleTest (int m, int n) {
@@ -42,15 +51,19 @@ public class ShuffleTest {
                 a[j] = j;
             }
             shuffle(a);
+
             // для проверки - вывод перемешанных массивов
 //            for (int j = 0; j < a.length; j++) {
 //                System.out.print(a[j] + " ");
 //            }
+
             for (int j = 0; j < a.length; j++) {
                 resArray[a[j]][j]++;
             }
+
             // для проверки - разделение между выведенными перемешанными массивами и рез.масс.
 //            System.out.println("");
+
         }
         System.out.println("");
         // занесение данных в результирующий массив
