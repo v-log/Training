@@ -32,6 +32,7 @@ public class ShuffleTest {
         }
         catch (NumberFormatException e1) {
             System.out.println("Необходимо ввести целые числа");
+            System.exit(1);
         }
 
     }
