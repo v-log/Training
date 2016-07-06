@@ -19,15 +19,19 @@ should be close to N/M.
 public class ShuffleTest {
 
     public static void main(String[] args) throws IOException {
-
-        if (args.length == 2) {
-            int m = Integer.parseInt(args[0]);
-            int n = Integer.parseInt(args[1]);
-            shuffleTest(m, n);
+        try {
+            if (args.length == 2) {
+                int m = Integer.parseInt(args[0]);
+                int n = Integer.parseInt(args[1]);
+                shuffleTest(m, n);
+            }
+            else {
+                System.out.println("Необходимо ввести два целых числа через пробел");
+                System.exit(1);
+            }
         }
-        else {
-            System.out.println("Необходимо ввести два целых числа через пробел");
-            System.exit(1);
+        catch (NumberFormatException e1) {
+            System.out.println("Необходимо ввести целые числа");
         }
 
     }
