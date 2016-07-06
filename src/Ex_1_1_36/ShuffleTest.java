@@ -1,7 +1,6 @@
 package Ex_1_1_36;
 
 import edu.princeton.cs.algs4.StdRandom;
-
 import java.io.IOException;
 
 /**
@@ -20,16 +19,15 @@ should be close to N/M.
 public class ShuffleTest {
 
     public static void main(String[] args) throws IOException {
-        try {
+
+        if (args.length == 2) {
             int m = Integer.parseInt(args[0]);
             int n = Integer.parseInt(args[1]);
             shuffleTest(m, n);
         }
-        catch (NumberFormatException e1) {
-            System.out.println("Необходимо ввести целые числа");
-        }
-        catch (ArrayIndexOutOfBoundsException e2) {
+        else {
             System.out.println("Необходимо ввести два целых числа через пробел");
+            System.exit(1);
         }
 
     }
