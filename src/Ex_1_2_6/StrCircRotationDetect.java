@@ -23,22 +23,9 @@ public class StrCircRotationDetect {
     }
 
     public static boolean strCircRotationDetect(String s1, String s2) {
-        for (int i = 0; i < s1.length() - 1; i++) {
-//            Вывод индекса, с которого строки совпадают:
-//            System.out.println(s2.indexOf(s1));
-            if (s2.indexOf(s1) == 0) {
-                return true;
-            }
-            else {
-                String sTemp = s1.substring(s1.length() - 1, s1.length()).concat(s1.substring(0, s1.length() - 1));
-//                Вывод деталей операции:
-//                System.out.print(" step " + (i + 1) + ": " + s1.substring(s1.length() - 1, s1.length()));
-//                System.out.print(" + " + s1.substring(0, s1.length() - 1));
-//                System.out.println(" = " + s2 + ";  length = " + s2.length());
-                s1 = sTemp;
-            }
-        }
-        return false;
+
+        return (s2.concat(s2).indexOf(s1) < s2.length() && s2.concat(s2).contains(s1));
+
     }
 
 }
