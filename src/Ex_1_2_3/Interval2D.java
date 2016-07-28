@@ -25,7 +25,47 @@ public class Interval2D {
                 int N = Integer.parseInt(args[0]);
                 double min = Double.parseDouble(args[1]);
                 double max = Double.parseDouble(args[2]);
-                Interval2DMethod(N, min, max);
+
+                // Инициализация плоскости в 1.5 раза больше самого большого прямоугольника (для удобства восприятия)
+                StdDraw.setXscale(0, max - min + (max - min)/2);
+                StdDraw.setYscale(0, max - min + (max - min)/2);
+                StdDraw.setPenRadius(.003);
+
+                Rectangle[] rectArray = new Rectangle[N];
+
+                int rectIntersectPairsCount = 0;
+                int rectInclusionPairsCount = 0;
+
+
+                for (int i = 0; i < N; i++) {
+                    // Создание случайных прямоугольников случайного цвета
+                    setPenColor(StdRandom.uniform(0, 255), StdRandom.uniform(0, 255), StdRandom.uniform(0, 255));
+                    double halfWidth = StdRandom.uniform(0, max - min) / 2;
+                    double halfHeight = StdRandom.uniform(0, max - min) / 2;
+                    double x = StdRandom.uniform(min + halfWidth, max - halfWidth);
+                    double y = StdRandom.uniform(min + halfHeight, max - halfHeight);
+
+                    rectArray[i] = new Rectangle(x, y, halfWidth, halfHeight);
+                    rectangle(x, y, halfWidth, halfHeight);
+
+                    // Сравнение текущего прямоугольника с предыдущими
+                    for (int j = 0; j <= i; j++) {
+                        // Исключение сравнения прямоугольника с самим собой
+                        if (i == j) continue;
+
+                        if ( rectArray[i].rectInclude(rectArray[j]) ) rectInclusionPairsCount++;
+                        else {
+                            if ( rectArray[j].rectInclude(rectArray[i]) ) rectInclusionPairsCount++;
+                            else if ( rectArray[i].rectIntersect(rectArray[j]) ) rectIntersectPairsCount++;
+                        }
+
+                    }
+
+                }
+
+                System.out.println("Rectangles intersections: " + rectIntersectPairsCount);
+                System.out.println("Rectangles inclusions: " + rectInclusionPairsCount);
+
             }
             else {
                 System.out.println("Необходимо ввести через пробел одно целое и два вещественных числа");
@@ -51,82 +91,71 @@ public class Interval2D {
             this.halfWidth = width;
             this.halfHeight = height;
         }
-    }
 
-    public static void Interval2DMethod (int N, double min, double max) {
+        // Проверка на включение прямоугольником this прямоугольника that
+        public boolean rectInclude (Rectangle that) {
 
-        // Инициализация плоскости в 1.5 раза больше самого большого прямоугольника (для удобства восприятия)
-        StdDraw.setXscale(0, max - min + (max - min)/2);
-        StdDraw.setYscale(0, max - min + (max - min)/2);
-        StdDraw.setPenRadius(.003);
+            // Определение середин сторон прямоугольника
+            double il = this.x - this.halfWidth;
+            double ir = this.x + this.halfWidth;
+            double it = this.y + this.halfHeight;
+            double ib = this.y - this.halfHeight;
 
-        Rectangle[] rectArray = new Rectangle[N];
+            double jl = that.x - that.halfWidth;
+            double jr = that.x + that.halfWidth;
+            double jt = that.y + that.halfHeight;
+            double jb = that.y - that.halfHeight;
 
-        int rectIntersectPairsCount = 0;
-        int rectInclusionPairsCount = 0;
+            // wInc - width include;  hInc - height include;
+            boolean wInc = intervalInclude(il, ir, jl, jr);
+            boolean hInc = intervalInclude(ib, it, jb, jt);
 
+            return ( wInc && hInc );
+        }
 
-        for (int i = 0; i < N; i++) {
-            // Создание случайных прямоугольников случайного цвета
-            setPenColor(StdRandom.uniform(0, 255), StdRandom.uniform(0, 255), StdRandom.uniform(0, 255));
-            double halfWidth = StdRandom.uniform(0, max - min) / 2;
-            double halfHeight = StdRandom.uniform(0, max - min) / 2;
-            double x = StdRandom.uniform(min + halfWidth, max - halfWidth);
-            double y = StdRandom.uniform(min + halfHeight, max - halfHeight);
+        // Проверка пересечения прямоугольников this и that
+        public boolean rectIntersect (Rectangle that) {
 
-            rectArray[i] = new Rectangle(x, y, halfWidth, halfHeight);
-            rectangle(x, y, halfWidth, halfHeight);
+            // Определение середин сторон прямоугольника
+            double il = this.x - this.halfWidth;
+            double ir = this.x + this.halfWidth;
+            double it = this.y + this.halfHeight;
+            double ib = this.y - this.halfHeight;
 
-            // Сравнение текущего прямоугольника с предыдущими
-            for (int j = 0; j <= i; j++) {
-                // Исключение сравнения прямоугольника с самим собой
-                if (i == j) continue;
+            double jl = that.x - that.halfWidth;
+            double jr = that.x + that.halfWidth;
+            double jt = that.y + that.halfHeight;
+            double jb = that.y - that.halfHeight;
 
-                // Определение середин сторон прямоугольника
-                double il = rectArray[i].x - rectArray[i].halfWidth;
-                double ir = rectArray[i].x + rectArray[i].halfWidth;
-                double jl = rectArray[j].x - rectArray[j].halfWidth;
-                double jr = rectArray[j].x + rectArray[j].halfWidth;
-                double it = rectArray[i].y + rectArray[i].halfHeight;
-                double ib = rectArray[i].y - rectArray[i].halfHeight;
-                double jt = rectArray[j].y + rectArray[j].halfHeight;
-                double jb = rectArray[j].y - rectArray[j].halfHeight;
+            // wI - widthIntersect;  hI - heightIntersect;
+            boolean wI1 = intervalIntersect(il, ir, jl, jr);
+            boolean hI1 = intervalIntersect(ib, it, jb, jt);
 
-                // wI - widthIntersect;  hI - heightIntersect;  wInc - widthInclude;  hInc - heightInclude;
-                boolean wI1 = Intersect(il, ir, jl, jr);
-                boolean hI1 = Intersect(ib, it, jb, jt);
-                boolean wI2 = Intersect(jl, jr, il, ir);
-                boolean hI2 = Intersect(jb, jt, ib, it);
+            // wInc - widthInclude;  hInc - heightInclude;
+            boolean wInc1 = intervalInclude(il, ir, jl, jr);
+            boolean hInc1 = intervalInclude(ib, it, jb, jt);
+            boolean wInc2 = intervalInclude(jl, jr, il, ir);
+            boolean hInc2 = intervalInclude(jb, jt, ib, it);
 
-                boolean wInc1 = Include(il, ir, jl, jr);
-                boolean hInc1 = Include(ib, it, jb, jt);
-                boolean wInc2 = Include(jl, jr, il, ir);
-                boolean hInc2 = Include(jb, jt, ib, it);
-
-                // Проверка на включение одного прямоугольника другим, и наоборот
-                if ( (wInc1 && hInc1) || (wInc2 && hInc2) ) rectInclusionPairsCount++;
-                // Проверка на пересечение площадей прямоугольника - совпадение сторон считается пересечением
-                else if ( (wI1 && hI1) || (wI2 && hI2) ||
-                        (wI1 && hInc1) || (wI2 && hInc1) ||
-                        (wI1 && hInc2) || (wI2 && hInc2) ||
-                        (hI1 && wInc1) || (hI2 && wInc1) ||
-                        (hI1 && wInc2) || (hI2 && wInc2))  rectIntersectPairsCount++;
-            }
+            return ( (wI1 && hI1) ||
+                    (wI1 && hInc1) ||
+                    (wI1 && hInc2) ||
+                    (hI1 && wInc1) ||
+                    (hI1 && wInc2) );
 
         }
-        System.out.println("Rectangles intersections: " + rectIntersectPairsCount);
-        System.out.println("Rectangles inclusions: " + rectInclusionPairsCount);
-    }
 
-    // Определение пересечения интервалов
-    private static boolean Intersect (double in1St, double in1End, double in2St, double in2End) {
-        return (  ( (in1St <= in2End) && (in1St >= in2St) ) )
-                ||( (in1End >= in2St) && (in1End <= in2End) );
-    }
+        // Определение включения интервалов
+        private static boolean intervalInclude (double in1St, double in1End, double in2St, double in2End) {
+            return ( (in1St < in2End) && (in1St > in2St) && (in1End < in2End) && (in1End > in2St) );
+        }
 
-    // Определение включения интервалов
-    private static boolean Include (double in1St, double in1End, double in2St, double in2End) {
-        return ( (in1St < in2End) && (in1St > in2St) && (in1End < in2End) && (in1End > in2St) );
+        // Определение пересечения интервалов
+        private static boolean intervalIntersect (double in1St, double in1End, double in2St, double in2End) {
+            return (  ( (in1St <= in2End) && (in1St >= in2St) ) )
+                    ||( (in1End >= in2St) && (in1End <= in2End) );
+        }
+
     }
 }
 
