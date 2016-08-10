@@ -24,8 +24,6 @@ public class StrCircRotationDetect {
 
     public static boolean strCircRotationDetect(String s1, String s2) {
 
-        return (s2.concat(s2).indexOf(s1) < s2.length() && s2.concat(s2).contains(s1));
-
+        return (s2.concat(s2).contains(s1));
     }
-
 }
