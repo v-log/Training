@@ -36,7 +36,6 @@ public class Interval2D {
                 int rectIntersectPairsCount = 0;
                 int rectInclusionPairsCount = 0;
 
-
                 for (int i = 0; i < N; i++) {
                     // Создание случайных прямоугольников случайного цвета
                     setPenColor(StdRandom.uniform(0, 255), StdRandom.uniform(0, 255), StdRandom.uniform(0, 255));
@@ -49,23 +48,14 @@ public class Interval2D {
                     rectangle(x, y, halfWidth, halfHeight);
 
                     // Сравнение текущего прямоугольника с предыдущими
-                    for (int j = 0; j <= i; j++) {
-                        // Исключение сравнения прямоугольника с самим собой
-                        if (i == j) continue;
-
+                    for (int j = 0; j < i; j++) {
                         if ( rectArray[i].rectInclude(rectArray[j]) ) rectInclusionPairsCount++;
-                        else {
-                            if ( rectArray[j].rectInclude(rectArray[i]) ) rectInclusionPairsCount++;
-                            else if ( rectArray[i].rectIntersect(rectArray[j]) ) rectIntersectPairsCount++;
-                        }
-
+                        else if ( rectArray[j].rectInclude(rectArray[i]) ) rectInclusionPairsCount++;
+                        else if ( rectArray[i].rectIntersect(rectArray[j]) ) rectIntersectPairsCount++;
                     }
-
                 }
-
                 System.out.println("Rectangles intersections: " + rectIntersectPairsCount);
                 System.out.println("Rectangles inclusions: " + rectInclusionPairsCount);
-
             }
             else {
                 System.out.println("Необходимо ввести через пробел одно целое и два вещественных числа");
@@ -76,7 +66,6 @@ public class Interval2D {
             System.out.println("Необходимо ввести через пробел одно целое и два вещественных числа");
             System.exit(1);
         }
-
     }
 
     private static class Rectangle {
@@ -85,11 +74,11 @@ public class Interval2D {
         final double halfWidth;
         final double halfHeight;
 
-        Rectangle (double x, double y, double width, double height) {
+        Rectangle (double x, double y, double halfWidth, double halfHeight) {
             this.x = x;
             this.y = y;
-            this.halfWidth = width;
-            this.halfHeight = height;
+            this.halfWidth = halfWidth;
+            this.halfHeight = halfHeight;
         }
 
         // Проверка на включение прямоугольником this прямоугольника that
@@ -110,7 +99,7 @@ public class Interval2D {
             boolean wInc = intervalInclude(il, ir, jl, jr);
             boolean hInc = intervalInclude(ib, it, jb, jt);
 
-            return ( wInc && hInc );
+            return wInc && hInc;
         }
 
         // Проверка пересечения прямоугольников this и that
@@ -137,25 +126,24 @@ public class Interval2D {
             boolean wInc2 = intervalInclude(jl, jr, il, ir);
             boolean hInc2 = intervalInclude(jb, jt, ib, it);
 
-            return ( (wI1 && hI1) ||
+            return    (wI1 && hI1) ||
                     (wI1 && hInc1) ||
                     (wI1 && hInc2) ||
                     (hI1 && wInc1) ||
-                    (hI1 && wInc2) );
-
+                    (hI1 && wInc2);
         }
 
         // Определение включения интервалов
         private static boolean intervalInclude (double in1St, double in1End, double in2St, double in2End) {
-            return ( (in1St < in2End) && (in1St > in2St) && (in1End < in2End) && (in1End > in2St) );
+            return  (in1St < in2End) && (in1St > in2St) &&
+                    (in1End < in2End) && (in1End > in2St);
         }
 
         // Определение пересечения интервалов
         private static boolean intervalIntersect (double in1St, double in1End, double in2St, double in2End) {
-            return (  ( (in1St <= in2End) && (in1St >= in2St) ) )
-                    ||( (in1End >= in2St) && (in1End <= in2End) );
+            return  ( (in1St <= in2End) && (in1St >= in2St) ) ||
+                    ( (in1End >= in2St) && (in1End <= in2End) );
         }
-
     }
 }
 
