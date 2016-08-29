@@ -5,25 +5,53 @@ package Ex_1_2_6;
  */
 
 /*
-1.2.6 A string s is a circular rotation of a string t if it matches when the characters
+1.2.6 A string str1 is a circular rotation of a string str2 if it matches when the characters
 are circularly shifted by any number of positions; e.g., ACTGACG is a circular shift of
 TGACGAC , and vice versa. Detecting this condition is important in the study of genomic
-sequences. Write a program that checks whether two given strings s and t are circular
+sequences. Write a program that checks whether two given strings str1 and str2 are circular
 shifts of one another. Hint : The solution is a one-liner with indexOf() , length() , and
 string concatenation.
  */
 
 public class StrCircRotationDetect {
     public static void main(String[] args) {
-        String s = "ACTGACG";
-        String t = "TGACGAC";
-
-        boolean result = strCircRotationDetect(s, t);
-        System.out.println(result);
+        try {
+            String s = "ACTGACG";
+            String t = "TGACGAC";
+            boolean result = strCircRotationDetect(s, t);
+            System.out.println(result);
+        }
+        catch (StrLenNotEqualException e1) {
+            System.out.println(e1.getMessage());
+            System.out.println(e1.getStrings());
+            System.exit(1);
+        }
+        // Исключение: если хотя бы одна строка null
+        catch (NullPointerException e2) {
+            System.out.println("Strings cannot be null");
+            System.exit(1);
+        }
     }
 
-    public static boolean strCircRotationDetect(String s1, String s2) {
+    // Проверка строк на смещение
+    public static boolean strCircRotationDetect(String str1, String str2) throws StrLenNotEqualException {
+        if (str1.length() != str2.length()) {
+            throw new StrLenNotEqualException("Strings must have same length", str1, str2);
+        }
+        else return str2.concat(str2).indexOf(str1) < str2.length()  &&  str2.concat(str2).contains(str1);
+    }
+}
 
-        return s2.concat(s2).indexOf(s1) < s2.length()  &&  s2.concat(s2).indexOf(s1) >= 0;
+// Исключение с уведомлением о разной длине строк
+class StrLenNotEqualException extends Exception {
+    private String str1;
+    private String str2;
+    public String getStrings () {
+        return "String 1: " + str1 + "\nString 2: " + str2;
+    }
+    public StrLenNotEqualException (String message, String str1, String str2) {
+        super(message);
+        this.str1 = str1;
+        this.str2 = str2;
     }
 }
