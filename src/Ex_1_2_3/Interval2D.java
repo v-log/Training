@@ -39,13 +39,9 @@ public class Interval2D {
                 for (int i = 0; i < N; i++) {
                     // Создание случайных прямоугольников случайного цвета
                     setPenColor(StdRandom.uniform(0, 255), StdRandom.uniform(0, 255), StdRandom.uniform(0, 255));
-                    double halfWidth = StdRandom.uniform(0, max - min) / 2;
-                    double halfHeight = StdRandom.uniform(0, max - min) / 2;
-                    double x = StdRandom.uniform(min + halfWidth, max - halfWidth);
-                    double y = StdRandom.uniform(min + halfHeight, max - halfHeight);
-
-                    rectArray[i] = new Rectangle(x, y, halfWidth, halfHeight);
-                    rectangle(x, y, halfWidth, halfHeight);
+                    rectArray[i] = Rectangle.randomRect(min, max);
+                    // Отрисовка созданных прямоугольников на плоскости
+                    rectangle(rectArray[i].x, rectArray[i].y, rectArray[i].halfWidth, rectArray[i].halfHeight);
 
                     // Сравнение текущего прямоугольника с предыдущими
                     for (int j = 0; j < i; j++) {
@@ -79,6 +75,14 @@ public class Interval2D {
             this.y = y;
             this.halfWidth = halfWidth;
             this.halfHeight = halfHeight;
+        }
+
+        public static Rectangle randomRect (double min, double max) {
+            double halfWidth = StdRandom.uniform(0, max - min) / 2;
+            double halfHeight = StdRandom.uniform(0, max - min) / 2;
+            double x = StdRandom.uniform(min + halfWidth, max - halfWidth);
+            double y = StdRandom.uniform(min + halfHeight, max - halfHeight);
+            return new Rectangle (x, y, halfWidth, halfHeight);
         }
 
         // Проверка на включение прямоугольником this прямоугольника that
@@ -146,15 +150,3 @@ public class Interval2D {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
