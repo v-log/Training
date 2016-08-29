@@ -35,10 +35,11 @@ public class StrCircRotationDetect {
 
     // Проверка строк на смещение
     public static boolean strCircRotationDetect(String str1, String str2) throws StrLenNotEqualException {
+        String str2Double = str2.concat(str2);
         if (str1.length() != str2.length()) {
             throw new StrLenNotEqualException("Strings must have same length", str1, str2);
         }
-        else return str2.concat(str2).indexOf(str1) < str2.length()  &&  str2.concat(str2).contains(str1);
+        else return str2Double.indexOf(str1) < str2.length()  &&  str2Double.contains(str1);
     }
 }
 
