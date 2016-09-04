@@ -21,11 +21,6 @@ public class StrCircRotationDetect {
             boolean result = strCircRotationDetect(s, t);
             System.out.println(result);
         }
-        catch (StrLenNotEqualException e1) {
-            System.out.println(e1.getMessage());
-            System.out.println(e1.getStrings());
-            System.exit(1);
-        }
         // Исключение: если хотя бы одна строка null
         catch (NullPointerException e2) {
             System.out.println("Strings cannot be null");
@@ -34,25 +29,9 @@ public class StrCircRotationDetect {
     }
 
     // Проверка строк на смещение
-    public static boolean strCircRotationDetect(String str1, String str2) throws StrLenNotEqualException {
+    public static boolean strCircRotationDetect(String str1, String str2) {
         String str2Double = str2.concat(str2);
-        if (str1.length() != str2.length()) {
-            throw new StrLenNotEqualException("Strings must have same length", str1, str2);
-        }
-        else return str2Double.indexOf(str1) < str2.length()  &&  str2Double.contains(str1);
-    }
-}
-
-// Исключение с уведомлением о разной длине строк
-class StrLenNotEqualException extends Exception {
-    private String str1;
-    private String str2;
-    public String getStrings () {
-        return "String 1: " + str1 + "\nString 2: " + str2;
-    }
-    public StrLenNotEqualException (String message, String str1, String str2) {
-        super(message);
-        this.str1 = str1;
-        this.str2 = str2;
+        return str1.length() == str2.length()  &&
+                str2Double.indexOf(str1) < str2.length()  &&  str2Double.contains(str1);
     }
 }
