@@ -32,36 +32,17 @@ public class SmartDate {
         }
     }
 
-    private final int month;
-    private final int day;
-    private final int year;
+    private int month;
+    private int day;
+    private int year;
+    private int[] monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    private String[] daysOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
-    // Проверка правильности (допустимости) введенной даты
     public SmartDate(int m, int d, int y) throws DateNotLegalException {
-
-        final int[] monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-        if (m < 1 || m > 12) throw new DateNotLegalException("Date is not legal: month must be 1 to 12. ", m, d, y);
-        else if ( m != 2 && d < 1 || d > monthDays[m - 1] ) {
-            throw new DateNotLegalException("Date is not legal: month " + m + " has " + monthDays[m-1] + " days in it. ", m, d, y);
+        if (isDateLegal(m, d, y)) {
+            month = m; day = d; year = y;
         }
-        else if ( m == 2 && y%400 == 0 && ( d < 1 || d > monthDays[m - 1] + 1 ) ) {
-            throw new DateNotLegalException("Date is not legal: month " + m + " has " + monthDays[m - 1] + 1 +
-                    " days every 400 years. ", m, d, y);
-        }
-        else if ( m == 2 && y%400 !=0 && y%100 == 0 && ( d < 1 || d > monthDays[m - 1] ) ) {
-            throw new DateNotLegalException("Date is not legal: month " + m + " has " + monthDays[m - 1] +
-                    " days every 100 years, except for every 400 years. ", m, d, y);
-        }
-        else if ( m == 2 && y%4 == 0 && ( d < 1 || d > monthDays[m - 1] + 1 ) ) {
-            throw new DateNotLegalException("Date is not legal: month " + m + " has " + monthDays[m - 1] + 1 +
-                    " days every 4 years, except for every 100 years. ", m, d, y);
-        }
-        else if ( m == 2 && y%400 != 0 && y%100 != 0 && y%4 != 0 && ( d < 1 || d > monthDays[m - 1] ) ) {
-            throw new DateNotLegalException("Date is not legal: month" + m + " has " + monthDays[m - 1] +
-                    " days in it, except for every 400 or 4 years. ", m, d, y);
-        }
-        else {month = m; day = d; year = y;}
+        else throw new DateNotLegalException("Date is not legal. ", m, d, y);
     }
 
     public int month()
@@ -76,20 +57,40 @@ public class SmartDate {
     public String toString()
     { return month() + "/" + day() + "/" + year(); }
 
+    // Проверка правильности (допустимости) введенной даты
+    public boolean isDateLegal (int m, int d, int y) {
+        int daysInMo;
+        // Проверка по месяцу сперва, чтобы избежать IndexOutOfBoundsException
+        if ( m >= 1 && m <= 12 ) daysInMo = monthDays[m-1];
+        else return false;
+
+        if (m == 2) {
+            if ( y%400 == 0 || ( y%100 != 0 && y%4 == 0 ) ) daysInMo++;
+        }
+        return d >= 1 && d <= daysInMo;
+    }
+
     // Вывод дня недели для введенной даты (условие - дата должна быть в 21-м веке)
     public String dayOfTheWeek () throws DateNotLegalException {
-        if (this.year >= 2000 && this.year <2100) {
-            String[] daysOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-            int[] monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        if (year >= 2000 && year <2100) {
 
-            int currYearIn21Cent = this.year - 2000;
-
+            int currYearIn21Cent = year - 2000;
             int monthDaysCount = 0;
-            for (int i = 0; i < this.month - 1; i++) {
-                monthDaysCount += monthDays[i];
-            }
 
-            return daysOfTheWeek[(currYearIn21Cent * 365 + currYearIn21Cent / 4 + monthDaysCount + this.day + 5) % 7];
+            int yearDays = currYearIn21Cent * 365;
+            int additionalYearDays = currYearIn21Cent / 4;
+            if (currYearIn21Cent%4 != 0) additionalYearDays++;
+
+            for (int i = 0; i < month - 1; i++) {
+                int daysInMo = monthDays[i];
+                if ( i == 1 && ( year%400 == 0 || ( year%100 != 0 && year%4 == 0 ) ) ) daysInMo++;
+                monthDaysCount += daysInMo;
+            }
+            // для отображения деталей процесса
+//            System.out.println((yearDays + additionalYearDays + monthDaysCount + this.day + 4));
+//            System.out.println(yearDays + " " + additionalYearDays + " " + monthDaysCount + " " + this.day);
+//            System.out.println((yearDays + additionalYearDays + monthDaysCount + this.day + 4) % 7);
+            return daysOfTheWeek[ ((yearDays + additionalYearDays + monthDaysCount + this.day + 4) % 7) ];
         }
         else throw new DateNotLegalException("To get the weekday date must be in 21st century. ", this.month, this.day, this.year);
     }
