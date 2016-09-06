@@ -49,10 +49,6 @@ public class SmartDateTest {
     }
 
     @Test
-    public void isDateLegalTest() throws Exception {
-    }
-
-    @Test
     public void dayOfTheWeekTest() throws Exception {
         SmartDate date1 = new SmartDate(1, 1, 2000);
         SmartDate date11 = new SmartDate(1, 1, 2016);
@@ -69,27 +65,6 @@ public class SmartDateTest {
         assertEquals("Sunday", weekDay2);
         assertEquals("Tuesday", weekDay21);
         assertEquals("Thursday", weekDay3);
-        // Ultimate dayOfTheWeek test
-//        int[] monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-//        String[] daysOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-//        int daysCount = 0;
-//        for (int i = 2000; i < 2100; i++) {
-//            for (int j = 1; j <= 12; j++) {
-//                int daysInMo = monthDays[j-1];
-//                if ( j == 2 && ( i%400 == 0 || ( i%100 != 0 && i%4 == 0 ) ) ) daysInMo++;
-//                for (int k = 1; k <= daysInMo; k++) {
-//                    SmartDate date = new SmartDate(j, k, i);
-//                    String weekDay = date.dayOfTheWeek();
-//                    System.out.println(date.toString());
-//                    daysCount++;
-//                    System.out.println(weekDay);
-////                    System.out.println(daysCount);
-//                    System.out.println();
-//                    assertEquals(daysOfTheWeek[ (daysCount + 4) % 7 ], weekDay);
-//                }
-//            }
-//        }
-//
     }
 
     @Test

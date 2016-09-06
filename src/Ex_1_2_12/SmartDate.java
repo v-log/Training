@@ -86,10 +86,6 @@ public class SmartDate {
                 if ( i == 1 && ( year%400 == 0 || ( year%100 != 0 && year%4 == 0 ) ) ) daysInMo++;
                 monthDaysCount += daysInMo;
             }
-            // для отображения деталей процесса
-//            System.out.println((yearDays + additionalYearDays + monthDaysCount + this.day + 4));
-//            System.out.println(yearDays + " " + additionalYearDays + " " + monthDaysCount + " " + this.day);
-//            System.out.println((yearDays + additionalYearDays + monthDaysCount + this.day + 4) % 7);
             return daysOfTheWeek[ ((yearDays + additionalYearDays + monthDaysCount + this.day + 4) % 7) ];
         }
         else throw new DateNotLegalException("To get the weekday date must be in 21st century. ", this.month, this.day, this.year);
