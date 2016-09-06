@@ -15,17 +15,10 @@ string concatenation.
 
 public class StrCircRotationDetect {
     public static void main(String[] args) {
-        try {
-            String s = "ACTGACG";
-            String t = "TGACGAC";
-            boolean result = strCircRotationDetect(s, t);
-            System.out.println(result);
-        }
-        // Исключение: если хотя бы одна строка null
-        catch (NullPointerException e2) {
-            System.out.println("Strings cannot be null");
-            System.exit(1);
-        }
+        String s = "ACTGACG";
+        String t = "TGACGAC";
+        boolean result = strCircRotationDetect(s, t);
+        System.out.println(result);
     }
 
     // Проверка строк на смещение
