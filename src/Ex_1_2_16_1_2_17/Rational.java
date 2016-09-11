@@ -49,24 +49,28 @@ public class Rational {
                 System.out.println(a.equals(b));
             }
             else {
-                System.out.println("There must be two arguments");
+                System.out.println("Введите числитель и знаменатель через / для каждого числа" +
+                        " в пределах интервала -2^62...2^64-1");
                 System.exit(1);
             }
         }
         catch (ArithmeticException e1) {
-            System.out.println("В знаменателе не может быть ноль");
+            System.out.println(e1.getMessage());
             System.exit(1);
         }
         catch (NumberFormatException e2) {
-            System.out.println("Введите числитель и знаменатель через / для каждого числа");
+            System.out.println("Введите числитель и знаменатель через / для каждого числа" +
+                    " в пределах интервала -2^62...2^64-1");
         }
     }
 
     private final long numer;
     private final long denom;
 
-    Rational(long numer, long denom) {
+    Rational(long numer, long denom) throws ArithmeticException {
         long gcd = gcd( numer, denom );
+
+        if (denom == 0) throw new ArithmeticException();
 
         if ( gcd > 1 ) {
             numer = numer / gcd;
@@ -102,22 +106,39 @@ public class Rational {
         long bD = b.denom;
 
         if (aD == bD) {
-            sumNumer = aN + bN;
+            sumNumer = sPlus(aN, bN);
             sum = new Rational(sumNumer, aD);
         }
         else{
-            tempNumer = aN * bD + bN * aD;
+            // Если знаменатели различны, перемножаем крест-накрест числители и знаменатели
+            long t1 = sTimes(aN, bD);
+            long t2 = sTimes(bN, aD);
+            // Временный числитель (так как потом у числителя
+            // и знаменателя может быть общий множитель)
+            tempNumer = sPlus(t1, t2);
             long gcdDenom = gcd(aD, bD);
 
             if ( gcdDenom > 1) {
-                tempDenom = aD * bD / gcdDenom;
-                tempNumer = aN * tempDenom / aD + bN * tempDenom / bD;
+                // Если у знаменателей есть общий множитель,
+                // находим временный общий знаменатель:
+                // перемножаем знаменатели и
+                // делим произведение на общий множитель
+                tempDenom = sTimes(aD, bD) / gcdDenom;
+                // Находим числители чисел
+                long t3 = sTimes(aN, tempDenom) / aD;
+                long t4 = sTimes(bN, tempDenom) / bD;
+                // Временный числитель
+                tempNumer = sPlus(t3, t4);
             }
-            else tempDenom = aD * bD;
+            // Если у знаменателей нет общего множителя,
+            // перемножаем их
+            else tempDenom = sTimes(aD, bD);
 
             long gcdSum = gcd(tempNumer, tempDenom);
 
             if ( gcdSum > 1) {
+                // Если у числителя и знаменателя есть общий
+                // множитель, сокращаем их
                 sumNumer = tempNumer / gcdSum;
                 sumDenom = tempDenom / gcdSum;
             }
@@ -143,22 +164,39 @@ public class Rational {
         long bD = b.denom;
 
         if (aD == bD) {
-            subNumer = aN - bN;
+            subNumer = sMinus(aN, bN);
             sub = new Rational(subNumer, aD);
         }
         else{
-            tempNumer = aN * bD - bN * aD;
+            // Если знаменатели различны, перемножаем крест-накрест числители и знаменатели
+            long t1 = sTimes(aN, bD);
+            long t2 = sTimes(bN, aD);
+            // Временный числитель (так как потом у числителя
+            // и знаменателя может быть общий множитель)
+            tempNumer = sMinus(t1, t2);
             long gcdDenom = gcd(aD, bD);
 
             if ( gcdDenom > 1) {
-                tempDenom = aD * bD / gcdDenom;
-                tempNumer = aN * tempDenom / aD + bN * tempDenom / bD;
+                // Если у знаменателей есть общий множитель,
+                // находим временный общий знаменатель:
+                // перемножаем знаменатели и
+                // делим произведение на общий множитель
+                tempDenom = sTimes(aD, bD) / gcdDenom;
+                // Находим числители чисел
+                long t3 = sTimes(aN, tempDenom) / aD;
+                long t4 = sTimes(bN, tempDenom) / bD;
+                // Временный числитель
+                tempNumer = sMinus(t3, t4);
             }
-            else tempDenom = aD * bD;
+            // Если у знаменателей нет общего множителя,
+            // перемножаем их
+            else tempDenom = sTimes(aD, bD);
 
             long gcdSub = gcd(tempNumer, tempDenom);
 
             if ( gcdSub > 1) {
+                // Если у числителя и знаменателя есть общий
+                // множитель, сокращаем их
                 subNumer = tempNumer / gcdSub;
                 subDenom = tempDenom / gcdSub;
             }
@@ -179,8 +217,8 @@ public class Rational {
         long tempDenom;
         Rational times;
 
-        tempNumer = this.numer * b.numer;
-        tempDenom = this.denom * b.denom;
+        tempNumer = sTimes(this.numer, b.numer);
+        tempDenom = sTimes(this.denom, b.denom);
 
         long gcdTimes = gcd(tempNumer, tempDenom);
 
@@ -205,8 +243,8 @@ public class Rational {
         long tempDenom;
         Rational div;
 
-        tempNumer = this.numer * b.denom;
-        tempDenom = this.denom * b.numer;
+        tempNumer = sTimes(this.numer, b.denom);
+        tempDenom = sTimes(this.denom, b.numer);
 
         long gcdDiv = gcd(tempNumer, tempDenom);
 
@@ -265,6 +303,34 @@ public class Rational {
         }
 
         return thisNumer == thatNumer && thisDenom == thatDenom;
+    }
+
+    // Safe plus
+    public static long sPlus(final long a, final long b) throws ArithmeticException {
+        long c = a + b;
+        assert ((a & b & ~c) | (~a & ~b & c)) >= 0 : "long overflow sPlus(" + a + ", " + b + ")";
+        if (((a & b & ~c) | (~a & ~b & c)) < 0) {
+            throw new ArithmeticException("long overflow sPlus(" + a + ", " + b + ")");
+        }
+        else return c;
+    }
+
+    // Safe minus
+    public static  long sMinus(final long a, final long b) {
+        if (( a < 0 && b > 0 ) || ( a > 0 && b < 0 )) return sPlus(a, -b);
+        else return a - b;
+    }
+
+    // Safe times
+    public static long sTimes(final long a, final long b) throws ArithmeticException {
+        if ( a == 0 || b == 0 ) return 0;
+        long c = a * b;
+        long c2 = c / b;
+        assert (a == c2) : "long overflow sTimes(" + a + ", " + b + ")";
+        if (a != c2) {
+            throw new ArithmeticException("long overflow sTimes(" + a + ", " + b + ")");
+        }
+        else return c;
     }
 
     // Строковое представление числа.
