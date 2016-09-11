@@ -53,8 +53,17 @@ public class Transaction {
                 System.out.println(a.equals(b));
             }
         }
-        catch (Exception e1) {
-            System.out.println("Error!");
+        catch (ArithmeticException e1) {
+            System.out.println(e1.getMessage());
+            System.exit(1);
+        }
+        catch (NumberFormatException e2) {
+            System.out.println("Введите информацию для двух транзакций: " +
+                    "через пробелы Фамилию, Дату, Сумму");
+            System.exit(1);
+        }
+        catch (IllegalArgumentException e3) {
+            System.out.println(e3.getMessage());
             System.exit(1);
         }
     }
@@ -63,12 +72,27 @@ public class Transaction {
     private final Date date;
     private final double amount;
 
-    public Transaction(String transaction)
+    public Transaction(String transaction) throws IllegalArgumentException,
+            ArithmeticException
     {
         String[] fields = transaction.split(" ");
-        customer = fields[0];
-        date = new Date(fields[1]);
-        amount = Double.parseDouble(fields[2]);
+        if (fields.length == 3) {
+
+            String customerTemp = fields[0];
+            if (!customerTemp.matches("[A-Z]([A-Za-z])+")) {
+                throw new IllegalArgumentException("Фамилия должна начинаться с" +
+                        "прописной буквы и содержать только буквы");
+            }
+            else customer = fields[0];
+
+            date = new Date(fields[1]);
+
+            double amountTemp = Double.parseDouble(fields[2]);
+            if (amountTemp <= 0) throw new ArithmeticException("Сумма должна быть положительна");
+            else amount = amountTemp;
+        }
+        else throw new ArithmeticException("Введите три аргумента через пробел:" +
+                " Фамилия Дата Сумма");
     }
 
     public String toString()
