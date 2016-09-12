@@ -77,9 +77,9 @@ public class Transaction {
     {
         String[] fields = transaction.split(" ");
         if (fields.length == 3) {
-
             String customerTemp = fields[0];
-            if (!customerTemp.matches("[A-Z]([A-Za-z])+")) {
+            if (!customerTemp.matches("[A-Z]([a-z])+") &&
+                    !customerTemp.matches("[A-Z]([a-z\\-])+[A-Z][a-z]+")) {
                 throw new IllegalArgumentException("Фамилия должна начинаться с" +
                         "прописной буквы и содержать только буквы");
             }

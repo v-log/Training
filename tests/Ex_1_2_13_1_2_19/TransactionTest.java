@@ -26,22 +26,47 @@ public class TransactionTest {
 
         // Тест на перехват неверного формата фамилии
         try {
-            Transaction tran1 = new Transaction("surn 11/16/2013 -102.123");
+            Transaction tran1 = new Transaction("surn 11/16/2013 102.123");
             fail("Should throw IllegalArgumentException");
         }
         catch (IllegalArgumentException e1) { }
 
         try {
-            Transaction tran1 = new Transaction("Surn9 11/16/2013 -102.123");
+            Transaction tran1 = new Transaction("Surn9 11/16/2013 102.123");
             fail("Should throw IllegalArgumentException");
         }
         catch (IllegalArgumentException e1) { }
 
         try {
-            Transaction tran1 = new Transaction("12308 11/16/2013 -102.123");
+            Transaction tran1 = new Transaction("12308 11/16/2013 102.123");
             fail("Should throw IllegalArgumentException");
         }
         catch (IllegalArgumentException e1) { }
+
+        try {
+            Transaction tran1 = new Transaction("Surn* 11/16/2013 102.123");
+            fail("Should throw IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e1) { }
+
+        try {
+            Transaction tran1 = new Transaction("Surn-surn 11/16/2013 102.123");
+            fail("Should throw IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e1) { }
+
+        // Тест на успешное создание Транзакции
+        try {
+            Transaction tran1 = new Transaction("Surn 11/16/2013 102.123");
+        }
+        catch (IllegalArgumentException e1) {
+            fail("Should create Transaction"); }
+
+        try {
+            Transaction tran1 = new Transaction("Surn-Surn 11/16/2013 102.123");
+        }
+        catch (IllegalArgumentException e1) {
+            fail("Should create Transaction"); }
     }
 
     @Test
