@@ -3,8 +3,6 @@ package Ex_1_3_4;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdIn;
 
-import java.util.Arrays;
-
 /**
  * Created by vl on 14.09.16.
  */
@@ -19,22 +17,22 @@ public class Parentheses {
         System.out.println(parenthesesBalanced(input));
     }
 
+    private static final String PAR_OPEN = "[({";
+    private static final String PAR_CLOSE = "])}";
+
     public static boolean parenthesesBalanced(String input) {
-        Character[] parOpen = {'[', '(', '{'};
-        Character[] parClose = {']', ')', '}'};
         char[] inputChars = input.toCharArray();
         Stack<Character> collection = new Stack<>();
-
         for (char ch : inputChars) {
 
-            if (Arrays.asList(parOpen).contains(ch))
+            if (PAR_OPEN.indexOf(ch) >= 0)
             {   collection.push(ch);   }
 
-            if (Arrays.asList(parClose).contains(ch)) {
+            if (PAR_CLOSE.indexOf(ch) >= 0) {
                 if (collection.isEmpty()) return false;
                 char lastPar = collection.pop();
-                int lastParInd = Arrays.asList(parClose).indexOf(ch);
-                int lastParOpenInd = Arrays.asList(parOpen).indexOf(lastPar);
+                int lastParInd = PAR_CLOSE.indexOf(ch);
+                int lastParOpenInd = PAR_OPEN.indexOf(lastPar);
                 if (lastParInd != lastParOpenInd) return false;
             }
         }

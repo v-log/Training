@@ -26,12 +26,15 @@ public class ResizingArrayStack<Item> implements Iterable<Item>
         a[N++] = item;
     }
 
-    public Item pop()
+    public Item pop() throws ArrayIndexOutOfBoundsException
     { // Remove item from top of stack.
-        Item item = a[--N];
-        a[N] = null; // Avoid loitering (see text).
-        if (N > 0 && N == a.length/4) resize(a.length/2);
-        return item;
+        if (isEmpty()) throw new ArrayIndexOutOfBoundsException("Stack is empty");
+        else {
+            Item item = a[--N];
+            a[N] = null; // Avoid loitering.
+            if (N > 0 && N == a.length / 4) resize(a.length / 2);
+            return item;
+        }
     }
 
     public Iterator<Item> iterator()
