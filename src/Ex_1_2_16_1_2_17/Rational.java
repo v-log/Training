@@ -170,7 +170,7 @@ public class Rational {
     }
 
     // Safe plus
-    public static long sPlus(final long a, final long b) throws ArithmeticException {
+    private static long sPlus(final long a, final long b) throws ArithmeticException {
         long c = a + b;
         if (((a & b & ~c) | (~a & ~b & c)) < 0) {
             throw new ArithmeticException("long overflow sPlus(" + a + ", " + b + ")");
@@ -179,7 +179,7 @@ public class Rational {
     }
 
     // Safe times
-    public static long sTimes(final long a, final long b) throws ArithmeticException {
+    private static long sTimes(final long a, final long b) throws ArithmeticException {
         if ( a == 0 || b == 0 ) return 0;
         long c = a * b;
         long c2 = c / b;
@@ -199,7 +199,7 @@ public class Rational {
     }
 
     // Определение наибольшего общего делителя (НОД)
-    public static long gcd(long p1, long q1) {
+    private static long gcd(long p1, long q1) {
         long r;
         long p = Math.abs(p1);
         long q = Math.abs(q1);
