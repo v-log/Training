@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by vl on 04.09.16.
@@ -110,5 +112,38 @@ public class SmartDateTest {
             fail("Should throw DateNotLegalException");
         }
         catch (DateNotLegalException e1) { }
+
+        // Тест на успешное создание объекта
+        try{
+            SmartDate date4 = new SmartDate("4/23/2003");
+        }
+        catch (DateNotLegalException e1)
+        { fail("Should create SmartDate"); }
+
+        // Тест на исключение при создании даты с избыточными аргументами
+        try{
+            SmartDate date4 = new SmartDate("4/23/2003/123");
+            fail("Should throw IllegalArgumentException");
+        }
+        catch (IllegalArgumentException e1) { }
+    }
+
+    @Test
+    public void hashCodeTest() throws Exception {
+        // Тест на совпадение хеш-кодов у эквивалентных дат
+        SmartDate date1 = new SmartDate("4/23/2003");
+        SmartDate date2 = new SmartDate("4/23/2003");
+        int h1 = date1.hashCode();
+        int h2 = date1.hashCode();
+        boolean res1 = h1 == h2;
+
+        if ( date1.equals(date2) ) assertTrue(res1);
+        else fail("To test hashCode must be equal");
+
+        // Тест на несовпадение хеш-кодов у неэквивалентных дат
+        SmartDate date3 = new SmartDate("6/15/2014");
+        int h3 = date2.hashCode();
+        boolean res2 = date1.equals(date3);
+        if (h1 != h3) assertFalse(res2);
     }
 }

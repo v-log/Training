@@ -1,5 +1,8 @@
 package Ex_1_2_13_1_2_19;
 
+import Ex_1_2_12.DateNotLegalException;
+import Ex_1_2_12.SmartDate;
+
 /**
  * Created by vl on 07.09.16.
  */
@@ -41,7 +44,7 @@ Transaction   customer, date, and amount,       Turing 5/22/1939 11.99
 
 */
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
     public static void main(String[] args) {
         try {
             if (args.length == 6) {
@@ -66,32 +69,34 @@ public class Transaction {
             System.out.println(e3.getMessage());
             System.exit(1);
         }
+        catch (DateNotLegalException e4) {
+            System.out.println(e4.getMessage());
+            System.exit(1);
+        }
     }
 
     private final String customer;
-    private final Date date;
+    private final SmartDate date;
     private final double amount;
 
     public Transaction(String transaction) throws IllegalArgumentException,
-            ArithmeticException
+            ArithmeticException, DateNotLegalException
     {
         String[] fields = transaction.split(" ");
         if (fields.length == 3) {
             String customerTemp = fields[0];
-            if (!customerTemp.matches("[A-Z]([a-z])+") &&
-                    !customerTemp.matches("[A-Z]([a-z\\-])+[A-Z][a-z]+")) {
+            if (!customerTemp.matches("\\p{Lu}\\p{Ll}+") &&
+                        !customerTemp.matches("\\p{Lu}\\p{Ll}+-\\p{Lu}\\p{Ll}+")) {
                 throw new IllegalArgumentException("Фамилия должна начинаться с" +
-                        "прописной буквы и содержать только буквы");
-            }
-            else customer = fields[0];
+                            "прописной буквы");
+            } else customer = fields[0];
 
-            date = new Date(fields[1]);
+            date = new SmartDate(fields[1]);
 
             double amountTemp = Double.parseDouble(fields[2]);
-            if (amountTemp <= 0) throw new ArithmeticException("Сумма должна быть положительна");
+            if (amountTemp <= 0) throw new ArithmeticException("Сумма должна быть положительной");
             else amount = amountTemp;
-        }
-        else throw new ArithmeticException("Введите три аргумента через пробел:" +
+        } else throw new IllegalArgumentException("Введите три аргумента через пробел:" +
                 " Фамилия Дата Сумма");
     }
 
@@ -101,7 +106,7 @@ public class Transaction {
     public String who()
     { return this.customer; }
 
-    public Date when()
+    public SmartDate when()
     { return this.date; }
 
     public double amount()
@@ -118,5 +123,21 @@ public class Transaction {
         if (!this.when().equals(that.when())) return false;
         if (this.amount() != that.amount()) return false;
         return true;
+    }
+
+    public int compareTo(Transaction that) {
+        double aAmount = this.amount;
+        double bAmount = that.amount;
+        if(aAmount == bAmount) return 0;
+        if(aAmount > bAmount) return 1;
+        return -1;
+    }
+
+    public int hashCode() {
+        int hash = 1;
+        hash = 127 * hash + customer.hashCode();
+        hash = 127 * hash + date.hashCode();
+        hash = 127 * hash + ((Double) amount).hashCode();
+        return hash;
     }
 }
