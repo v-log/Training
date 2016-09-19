@@ -44,7 +44,9 @@ public class SmartDate {
             int m = Integer.parseInt(fields[0]);
             int d = Integer.parseInt(fields[1]);
             int y = Integer.parseInt(fields[2]);
-            new SmartDate(m, d, y);
+            month = m;
+            day = d;
+            year = y;
         }
         else throw new IllegalArgumentException("Enter month, day, and year");
     }
@@ -109,17 +111,11 @@ public class SmartDate {
 
         SmartDate that = (SmartDate) x;
 
-        if(this.month() != that.month()) return false;
-        if(this.day() != that.day()) return false;
-        if(this.year() != that.year()) return false;
-        return true;
+        return this.month() == that.month() && this.day() == that.day() && this.year() == that.year();
     }
 
     public int hashCode() {
-        int hash = 1;
-        hash = 31 * hash + ((Integer) month()).hashCode();
-        hash = 31 * hash + ((Integer) day()).hashCode();
-        hash = 31 * hash + ((Integer) year()).hashCode();
+        int hash = this.year() * 10000 + this.day() * 100 + this.month();
         return hash;
     }
 }

@@ -16,7 +16,7 @@ public class TransactionTest {
             Transaction tran1 = new Transaction("Surn 11/16/2013 102.123 explicitArg");
             fail("Should throw ArithmeticException");
         }
-        catch (ArithmeticException e1) { }
+        catch (IllegalArgumentException e1) { }
 
         // Тест на перехват отрицательной суммы транзакции
         try {

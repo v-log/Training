@@ -119,10 +119,7 @@ public class Transaction implements Comparable<Transaction> {
 
         Transaction that = (Transaction) x;
 
-        if (!this.who().equals(that.who())) return false;
-        if (!this.when().equals(that.when())) return false;
-        if (this.amount() != that.amount()) return false;
-        return true;
+        return this.who().equals(that.who()) && this.when().equals(that.when()) && this.amount() == that.amount();
     }
 
     public int compareTo(Transaction that) {
@@ -135,9 +132,9 @@ public class Transaction implements Comparable<Transaction> {
 
     public int hashCode() {
         int hash = 1;
-        hash = 127 * hash + customer.hashCode();
-        hash = 127 * hash + date.hashCode();
-        hash = 127 * hash + ((Double) amount).hashCode();
+        hash = 31 * hash + customer.hashCode();
+        hash = 31 * hash + date.hashCode();
+        hash = 31 * hash + ((Double) amount).hashCode();
         return hash;
     }
 }

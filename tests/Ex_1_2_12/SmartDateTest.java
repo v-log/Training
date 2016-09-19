@@ -131,10 +131,10 @@ public class SmartDateTest {
     @Test
     public void hashCodeTest() throws Exception {
         // Тест на совпадение хеш-кодов у эквивалентных дат
-        SmartDate date1 = new SmartDate("4/23/2003");
+        SmartDate date1 = new SmartDate(4, 23, 2003);
         SmartDate date2 = new SmartDate("4/23/2003");
         int h1 = date1.hashCode();
-        int h2 = date1.hashCode();
+        int h2 = date2.hashCode();
         boolean res1 = h1 == h2;
 
         if ( date1.equals(date2) ) assertTrue(res1);
@@ -142,8 +142,9 @@ public class SmartDateTest {
 
         // Тест на несовпадение хеш-кодов у неэквивалентных дат
         SmartDate date3 = new SmartDate("6/15/2014");
-        int h3 = date2.hashCode();
+        int h3 = date3.hashCode();
         boolean res2 = date1.equals(date3);
         if (h1 != h3) assertFalse(res2);
+        else fail("To test hashCode must not be equal");
     }
 }
