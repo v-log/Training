@@ -14,7 +14,7 @@ public class TransactionTest {
         // Тест на перехват неверного количества аргументов
         try {
             Transaction tran1 = new Transaction("Surn 11/16/2013 102.123 explicitArg");
-            fail("Should throw ArithmeticException");
+            fail("Should throw IllegalArgumentException");
         }
         catch (IllegalArgumentException e1) { }
 
