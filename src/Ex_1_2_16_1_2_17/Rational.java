@@ -33,14 +33,8 @@ public class Rational {
                 String a1 = args[0];
                 String b1 = args[1];
 
-                String[] aArray = a1.split("/");
-                long aNumer = Long.parseLong(aArray[0]);
-                long aDenom = Long.parseLong(aArray[1]);
-                Rational a = new Rational(aNumer, aDenom);
-                String[] bArray = b1.split("/");
-                long bNumer = Long.parseLong(bArray[0]);
-                long bDenom = Long.parseLong(bArray[1]);
-                Rational b = new Rational(bNumer, bDenom);
+                Rational a = new Rational(a1);
+                Rational b = new Rational(b1);
 
                 System.out.println(a.plus(b).toString());
                 System.out.println(a.minus(b).toString());
@@ -50,7 +44,7 @@ public class Rational {
             }
             else {
                 System.out.println("Введите числитель и знаменатель через / для каждого числа" +
-                        " в пределах интервала -2^62...2^64-1");
+                        " в пределах интервала -2^63...2^63-1");
                 System.exit(1);
             }
         }
@@ -60,7 +54,12 @@ public class Rational {
         }
         catch (NumberFormatException e2) {
             System.out.println("Введите числитель и знаменатель через / для каждого числа" +
-                    " в пределах интервала -2^62...2^64-1");
+                    " в пределах интервала -2^63...2^63-1");
+        }
+        catch (ArrayIndexOutOfBoundsException e3) {
+            System.out.println("Введите числитель и знаменатель через / для каждого числа" +
+                    " в пределах интервала -2^63...2^63-1");
+            System.exit(1);
         }
     }
 
@@ -71,6 +70,36 @@ public class Rational {
         long gcdTemp = gcd( num, den );
 
         if (den == 0) throw new ArithmeticException();
+
+        if ( gcdTemp > 1 ) {
+            num = num / gcdTemp;
+            den = den / gcdTemp;
+        }
+        if (den < 0) {
+            numer = -num;
+            denom = -den;
+        } else {
+            numer = num;
+            denom = den;
+        }
+    }
+
+    Rational(String rat) {
+        String[] ratArgs;
+        long num;
+        long den;
+        if ( rat.indexOf('/') == -1 ) {
+            num = Long.parseLong(rat);
+            den = 1;
+        }
+        else {
+            ratArgs = rat.split("/");
+            num = Long.parseLong(ratArgs[0]);
+            den = Long.parseLong(ratArgs[1]);
+            if (den == 0) throw new ArithmeticException();
+        }
+
+        long gcdTemp = gcd(num, den);
 
         if ( gcdTemp > 1 ) {
             num = num / gcdTemp;
@@ -103,7 +132,7 @@ public class Rational {
 
         if (aD == bD) {
             sumNumer = sPlus(aN, bN);
-            sum = new Rational(sumNumer, aD);
+            return new Rational(sumNumer, aD);
         }
         else{
             // Если знаменатели различны, перемножаем крест-накрест числители и знаменатели
@@ -113,10 +142,8 @@ public class Rational {
             long gcdDenom = gcd(aD, bD);
 
             if ( gcdDenom > 1) {
-                // Если у знаменателей есть НОД,
-                // находим общий знаменатель:
-                // перемножаем знаменатели и
-                // делим произведение на НОД
+                // Если у знаменателей есть НОД, находим общий знаменатель:
+                // перемножаем знаменатели и делим произведение на НОД
                 sumDenom = sTimes(aD, bD) / gcdDenom;
                 // Находим числители чисел
                 long t3 = sTimes(aN, sumDenom) / aD;
@@ -126,9 +153,8 @@ public class Rational {
             }
             else sumDenom = sTimes(aD, bD);
 
-            sum = new Rational(sumNumer, sumDenom);
+            return new Rational(sumNumer, sumDenom);
         }
-        return sum;
     }
 
     // Вычитание из this b
