@@ -5,10 +5,10 @@ import edu.princeton.cs.algs4.ResizingArrayStack;
 /**
  * Created by vl on 18.09.16.
  */
-/* 1.3.10 Write a filter InfixToPostfix that converts an arithmetic expression from
+/* 1.3.10 Write a filter INFIXtoPostfix that converts an arithmetic expression from
 infix to postfix. */
 
-public class InfixToPostfix {
+public class INFIXtoPostfix {
 
     public static void main(String[] args) {
         try {
@@ -44,6 +44,11 @@ public class InfixToPostfix {
         }
         catch (IllegalArgumentException e1) {
             System.out.println(e1.getMessage());
+            System.exit(1);
+        }
+        catch (NullPointerException e2) {
+            System.out.println(e2.getMessage());
+            System.exit(1);
         }
     }
 

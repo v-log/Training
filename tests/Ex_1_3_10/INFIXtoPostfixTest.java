@@ -2,14 +2,14 @@ package Ex_1_3_10;
 
 import org.junit.Test;
 
-import static Ex_1_3_10.InfixToPostfix.*;
+import static Ex_1_3_10.INFIXtoPostfix.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
  * Created by vl on 20.09.16.
  */
-public class InfixToPostfixTest {
+public class INFIXtoPostfixTest {
     @Test
     public void convertINFIXToPostfixTest() throws Exception {
 
