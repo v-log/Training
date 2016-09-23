@@ -38,6 +38,19 @@ public class SmartDate {
     private int[] monthDays = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     private String[] daysOfTheWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
+    public SmartDate(String date) throws DateNotLegalException, IllegalArgumentException {
+        String[] fields = date.split("/");
+        if (fields.length == 3) {
+            int m = Integer.parseInt(fields[0]);
+            int d = Integer.parseInt(fields[1]);
+            int y = Integer.parseInt(fields[2]);
+            month = m;
+            day = d;
+            year = y;
+        }
+        else throw new IllegalArgumentException("Enter month, day, and year");
+    }
+
     public SmartDate(int m, int d, int y) throws DateNotLegalException {
         if (isDateLegal(m, d, y)) {
             month = m; day = d; year = y;
@@ -90,21 +103,19 @@ public class SmartDate {
         }
         else throw new DateNotLegalException("To get the weekday date must be in 21st century. ", this.month, this.day, this.year);
     }
-}
 
-// Исключение с уведомлением о вводе недопустимой даты
-class DateNotLegalException extends Exception {
+    public boolean equals(Object x) {
+        if (this == x) return true;
+        if (x == null) return false;
+        if (this.getClass() != x.getClass()) return false;
 
-    private int month;
-    private int day;
-    private int year;
-    public String getDate() {
-        return month + "/" + day + "/" + year;
+        SmartDate that = (SmartDate) x;
+
+        return this.month() == that.month() && this.day() == that.day() && this.year() == that.year();
     }
-    public DateNotLegalException (String message, int m, int d, int y) {
-        super(message);
-        month = m;
-        day = d;
-        year = y;
+
+    public int hashCode() {
+        int hash = this.year() * 10000 + this.day() * 100 + this.month();
+        return hash;
     }
 }
