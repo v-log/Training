@@ -28,6 +28,8 @@ implementation of Rational (see Exercise 1.2.16) that is immune to overflow.
 
 public class Rational {
     public static void main(String[] args) {
+        String excMessage = "Введите числитель и знаменатель через / для каждого числа" +
+                " в пределах интервала -2^63...2^63-1";
         try {
             if (args.length == 2) {
                 String a1 = args[0];
@@ -43,8 +45,7 @@ public class Rational {
                 System.out.println(a.equals(b));
             }
             else {
-                System.out.println("Введите числитель и знаменатель через / для каждого числа" +
-                        " в пределах интервала -2^63...2^63-1");
+                System.out.println(excMessage);
                 System.exit(1);
             }
         }
@@ -53,12 +54,10 @@ public class Rational {
             System.exit(1);
         }
         catch (NumberFormatException e2) {
-            System.out.println("Введите числитель и знаменатель через / для каждого числа" +
-                    " в пределах интервала -2^63...2^63-1");
+            System.out.println(excMessage);
         }
         catch (ArrayIndexOutOfBoundsException e3) {
-            System.out.println("Введите числитель и знаменатель через / для каждого числа" +
-                    " в пределах интервала -2^63...2^63-1");
+            System.out.println(excMessage);
             System.exit(1);
         }
     }
