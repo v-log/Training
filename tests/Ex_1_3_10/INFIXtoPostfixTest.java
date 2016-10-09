@@ -13,7 +13,7 @@ public class INFIXtoPostfixTest {
     @Test
     public void convertINFIXToPostfixTest() throws Exception {
 
-    // Тест на успешную конвертацию
+        // Тест на успешную конвертацию
         assertEquals("A B C * + ", convINFIXtoPostfix("A + B * C"));
         assertEquals("A B * C - ", convINFIXtoPostfix("A * B - C"));
 
@@ -55,7 +55,7 @@ public class INFIXtoPostfixTest {
         assertEquals("A B C / + D E F G ^ * H + I J K ^ * L * M N ^ P Q ^ R + * * - / + ", outStr30);
 
 
-    //Тест на перехват исключения при вводе недопустимой операции
+        //Тест на перехват исключения при вводе недопустимой операции
         try {
             convINFIXtoPostfix("A < B");
             fail("Should throw IllegalArgumentException");
@@ -78,7 +78,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    //Тест на перехват исключения при пропуске операнда
+        //Тест на перехват исключения при пропуске операнда
         try {
             convINFIXtoPostfix("A * - B");
             fail("Should throw IllegalArgumentException");
@@ -106,7 +106,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват исключения при пропуске оператора
+        // Тест на перехват исключения при пропуске оператора
         try {
             convINFIXtoPostfix("A  B");
             fail("Should throw IllegalArgumentException");
@@ -119,7 +119,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват исключения при пропуске оператора после открывающей скобки
+        // Тест на перехват исключения при пропуске оператора после открывающей скобки
         try {
             convINFIXtoPostfix("A * B ( C");
             fail("Should throw IllegalArgumentException");
@@ -127,7 +127,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват исключения при пропуске операнда после открытия скобки
+        // Тест на перехват исключения при пропуске операнда после открытия скобки
         try {
             convINFIXtoPostfix("A * B ( + C");
             fail("Should throw IllegalArgumentException");
@@ -147,7 +147,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват исключения при незакрытой скобке
+        // Тест на перехват исключения при незакрытой скобке
         try {
             convINFIXtoPostfix("(");
             fail("Should throw IllegalArgumentException");
@@ -173,7 +173,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват исключения при вводе пустой строки
+        // Тест на перехват исключения при вводе пустой строки
         try {
             convINFIXtoPostfix("");
             fail("Should throw IllegalArgumentException");
@@ -181,7 +181,7 @@ public class INFIXtoPostfixTest {
         catch (IllegalArgumentException e1) { }
 
 
-    // Тест на перехват NullPointerException
+        // Тест на перехват NullPointerException
         try{
             convINFIXtoPostfix(null);
             fail("Should throw NullPointerException");
@@ -209,7 +209,7 @@ public class INFIXtoPostfixTest {
 
     @Test
     public void OperatorTest() throws Exception {
-    // Тест на успешное создание оператора
+        // Тест на успешное создание оператора
         try { Operator oper1 = new Operator('+'); }
         catch (IllegalArgumentException e1) { fail("Should create Operator"); }
 
@@ -219,7 +219,7 @@ public class INFIXtoPostfixTest {
         try { Operator oper1 = new Operator('^'); }
         catch (IllegalArgumentException e1) { fail("Should create Operator"); }
 
-    // Тест на перехват исключения при вводе недопустимого оператора
+        // Тест на перехват исключения при вводе недопустимого оператора
         try {
             Operator oper1 = new Operator(';');
             fail("Should throw IllegalArgumentException");
