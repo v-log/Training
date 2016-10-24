@@ -5,11 +5,11 @@ import java.lang.reflect.Array;
 /**
  * Created by vl on 22.10.16.
  */
-class ListsArrayForTests {
+public class ListsArrayForTests {
     private LinkedListStack<String>[] listsArray;
 
     @SuppressWarnings("unchecked")
-    ListsArrayForTests(int arraySize) {
+    public ListsArrayForTests(int arraySize) {
         listsArray = new LinkedListStack[arraySize];
 
         for (int i = 0; i < listsArray.length; i++) {
@@ -23,7 +23,7 @@ class ListsArrayForTests {
         }
     }
 
-    LinkedListStack<String> getList(int listIndex) {
+    public LinkedListStack<String> getList(int listIndex) {
         return listsArray[listIndex];
     }
 }

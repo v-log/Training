@@ -73,18 +73,6 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         return item;
     }
 
-    private void removeAfterInner(Node nodeToRemoveAfter) throws IndexOutOfBoundsException {
-
-        // Inner method for removeAfter()
-        if ( nodeToRemoveAfter != null && nodeToRemoveAfter.next != null ) {
-            Node nodeToRemove = nodeToRemoveAfter.next;
-            nodeToRemoveAfter.next = nodeToRemove.next;
-            N--;
-        } else {
-            throw new IndexOutOfBoundsException("This or the next element is null");
-        }
-    }
-
     public void removeAfter(Item itemToRemoveAfter) throws IllegalArgumentException {
 
         // Remove Node from this linked-list stack after Node with item of itemToRemoveAfter
@@ -121,20 +109,24 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         this.removeAfterInner(resultNode);
     }
 
-    private void insertAfterInner(Node nodeToInsertAfter, Node nodeToInsert) {
+    private void removeAfterInner(Node nodeToRemoveAfter)
+            throws IndexOutOfBoundsException {
 
-        // Inner method for insertAfterResult()
-        if ( nodeToInsertAfter != null && nodeToInsert != null ) {
-            Node temp = nodeToInsertAfter.next;
-            nodeToInsertAfter.next = nodeToInsert;
-            nodeToInsert.next = temp;
-            N++;
+        // Inner method for removeAfter()
+        if ( nodeToRemoveAfter != null && nodeToRemoveAfter.next != null ) {
+            Node nodeToRemove = nodeToRemoveAfter.next;
+            nodeToRemoveAfter.next = nodeToRemove.next;
+            N--;
+        } else {
+            throw new IndexOutOfBoundsException("This or the next element is null");
         }
     }
 
-    public void insertAfter(Item itemToInsertAfter, Item itemToInsert) throws IllegalArgumentException {
+    public void insertAfter(Item itemToInsertAfter, Item itemToInsert)
+            throws IllegalArgumentException {
 
-        // Insert Node from this Linked-List Stack after Node with item <itemToInsertAfter>
+        // Insert Node from this Linked-List Stack after Node with
+        // item <itemToInsertAfter>
         // Индекс искомого Node с item равным itemToInsertAfter
         int indexToInsertAfter = -1;
         // Начальное значение Node для искомого Node
@@ -171,6 +163,17 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         this.insertAfterInner(resultNode, nodeToInsert);
     }
 
+    private void insertAfterInner(Node nodeToInsertAfter, Node nodeToInsert) {
+
+        // Inner method for insertAfter()
+        if ( nodeToInsertAfter != null && nodeToInsert != null ) {
+            Node temp = nodeToInsertAfter.next;
+            nodeToInsertAfter.next = nodeToInsert;
+            nodeToInsert.next = temp;
+            N++;
+        }
+    }
+
     public void remove(LinkedListStack<Item> list, String key) {
 
         // Remove from Linked-List Stack <list> a Node with string item "key"
@@ -194,7 +197,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
             }
         }
 
-        // Если удаляемый элемент отсутствует в списке <list>, бросить исключени
+        // Если удаляемый элемент отсутствует в списке <list>, бросить исключение
         if(noMatchCount == listSize) {
             throw new IllegalArgumentException("List \""
                     + this + "\" does not contain \"" + key + "\"");
