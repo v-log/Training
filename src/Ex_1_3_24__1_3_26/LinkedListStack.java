@@ -76,34 +76,18 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     public void removeAfter(Item itemToRemoveAfter) throws IllegalArgumentException {
 
         // Remove Node from this linked-list stack after Node with item of itemToRemoveAfter
-        // Индекс искомого Node с item равным itemToRemoveAfter
-        int indexToRemoveAfterTemp = -1;
-        int indexToRemoveAfter = -1;
         // Начальное значение Node для искомого Node
         Node tempNode = this.first;
-        // Искомый Node
-        Node resultNode = null;
 
-        // Поиск Node с item равным itemToRemoveAfter
-        for(Iterator<Item> iterator = this.iterator(); iterator.hasNext(); ) {
-            if(!iterator.next().equals(itemToRemoveAfter)) {
-                indexToRemoveAfterTemp++;
-            } else {
-                indexToRemoveAfterTemp++;
-                indexToRemoveAfter = indexToRemoveAfterTemp;
-                break;
-            }
-        }
+        // Индекс искомого Node с item равным itemToRemoveAfter
+        int indexToRemoveAfter = indexSearch(itemToRemoveAfter);
 
         // Если искомый элемент не найден, бросить соответствующее исключение
         if(indexToRemoveAfter == -1) throw new IllegalArgumentException("List " + this
                 + " does not contain \"" + itemToRemoveAfter.toString() + "\"");
 
-        // Определение искомого Node
-        for (int i = 0; i < indexToRemoveAfter + 1; i++) {
-            resultNode = tempNode;
-            tempNode = tempNode.next;
-        }
+        // Искомый Node
+        Node resultNode = getNodeAt(indexToRemoveAfter);
 
         // Обращение к внутреннему методу для совершения операции удаления
         this.removeAfterInner(resultNode);
@@ -127,25 +111,12 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
         // Insert Node from this Linked-List Stack after Node with
         // item <itemToInsertAfter>
-        // Индекс искомого Node с item равным itemToInsertAfter
-        int indexToInsertAfter = -1;
-        // Начальное значение Node для искомого Node
-        Node tempNode = this.first;
-        // Искомый Node
-        Node resultNode = null;
         // Вставляемый Node
         Node nodeToInsert = new Node();
         nodeToInsert.item = itemToInsert;
 
-        // Поиск Node с item равным itemToInsertAfter
-        for(Iterator<Item> iterator = this.iterator(); iterator.hasNext(); ) {
-            if(!iterator.next().equals(itemToInsertAfter)) {
-                indexToInsertAfter++;
-            } else {
-                indexToInsertAfter++;
-                break;
-            }
-        }
+        // Индекс искомого Node с item равным itemToInsertAfter
+        int indexToInsertAfter = indexSearch(itemToInsertAfter);
 
         // Если искомый элемент не найден, бросить соответствующее исключение
         if(indexToInsertAfter == -1) {
@@ -153,11 +124,8 @@ public class LinkedListStack<Item> implements Iterable<Item> {
                     + "\" does not contain \"" + itemToInsertAfter.toString() + "\"");
         }
 
-        // Определение искомого Node
-        for (int i = 0; i < indexToInsertAfter + 1; i++) {
-            resultNode = tempNode;
-            tempNode = tempNode.next;
-        }
+        // Искомый Node
+        Node resultNode = getNodeAt(indexToInsertAfter);
 
         // Обращение к внутреннему методу для совершения операции вставки
         this.insertAfterInner(resultNode, nodeToInsert);
@@ -202,6 +170,43 @@ public class LinkedListStack<Item> implements Iterable<Item> {
             throw new IllegalArgumentException("List \""
                     + this + "\" does not contain \"" + key + "\"");
         }
+    }
+
+    private int indexSearch(Item itemToSearch) {
+
+        // Inner method to get index of searched item
+        // Индекс искомого Node с item равным itemToSearch
+        int indexSearchTemp = -1;
+        int indexSearch = -1;
+
+        // Поиск Node с item равным itemToSearch
+        for(Item args : this) {
+            if(!args.equals(itemToSearch)) {
+                indexSearchTemp++;
+            } else {
+                indexSearchTemp++;
+                indexSearch = indexSearchTemp;
+                break;
+            }
+        }
+
+        return indexSearch;
+    }
+
+    private Node getNodeAt(int index) {
+
+        // Inner method to get Node at <index>
+        // Начальное значение Node для искомого Node
+        Node tempNode = this.first;
+        // Искомый Node
+        Node resultNode = null;
+
+        // Определение искомого Node
+        for (int i = 0; i < index + 1; i++) {
+            resultNode = tempNode;
+            tempNode = tempNode.next;
+        }
+        return resultNode;
     }
 
     public Iterator<Item> iterator() {
