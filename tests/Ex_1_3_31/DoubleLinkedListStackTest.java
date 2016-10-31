@@ -17,13 +17,13 @@ public class DoubleLinkedListStackTest {
 
         originalList0.insertAtBeginning("inserted");
 
-        DoubleLinkedListStack<String> listResultExpected1 = new DoubleLinkedListStack<>();
-        String[] listArgs1 = {"five", "four", "three", "two", "one", "inserted", };
-        for (String i : listArgs1) {
-            listResultExpected1.push(i);
+        DoubleLinkedListStack<String> listResultExpected0 = new DoubleLinkedListStack<>();
+        String[] listArgs0 = {"five", "four", "three", "two", "one", "inserted", };
+        for (String i : listArgs0) {
+            listResultExpected0.push(i);
         }
 
-        assertTrue(originalList0.equals(listResultExpected1));
+        assertTrue(originalList0.equals(listResultExpected0));
 
         // Тест на успешное добавление в пустой список
         DoubleLinkedListStack<String> emptyList0 = new DoubleLinkedListStack<>();
@@ -127,82 +127,82 @@ public class DoubleLinkedListStackTest {
         DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(6);
 
         // Тест на успешное удаление элемента в середине списка
-        DoubleLinkedListStack<String> originalList1 = originalLists.getList(0);
+        DoubleLinkedListStack<String> originalList0 = originalLists.getList(0);
 
-        originalList1.remove(originalList1, "three");
+        originalList0.remove(originalList0, "three");
+
+        DoubleLinkedListStack<String> listResultExpected0 = new DoubleLinkedListStack<>();
+        String[] listArgs0 = {"five", "four", "two", "one", };
+        for (String i : listArgs0) {
+            listResultExpected0.push(i);
+        }
+
+        assertTrue(originalList0.equals(listResultExpected0));
+
+        // Тест на успешное удаление элемента в конце списка
+        DoubleLinkedListStack<String> originalList1 = originalLists.getList(1);
+
+        originalList1.remove(originalList1, "five");
 
         DoubleLinkedListStack<String> listResultExpected1 = new DoubleLinkedListStack<>();
-        String[] listArgs1 = {"five", "four", "two", "one", };
+        String[] listArgs1 = {"four", "three", "two", "one", };
         for (String i : listArgs1) {
             listResultExpected1.push(i);
         }
 
         assertTrue(originalList1.equals(listResultExpected1));
 
-        // Тест на успешное удаление элемента в конце списка
-        DoubleLinkedListStack<String> originalList2 = originalLists.getList(1);
+        // Тест на успешное удаление элемента в начале списка
+        DoubleLinkedListStack<String> originalList2 = originalLists.getList(2);
 
-        originalList2.remove(originalList2, "five");
+        originalList2.remove(originalList2, "one");
 
         DoubleLinkedListStack<String> listResultExpected2 = new DoubleLinkedListStack<>();
-        String[] listArgs2 = {"four", "three", "two", "one", };
+        String[] listArgs2 = {"five", "four", "three", "two", };
         for (String i : listArgs2) {
             listResultExpected2.push(i);
         }
 
         assertTrue(originalList2.equals(listResultExpected2));
 
-        // Тест на успешное удаление элемента в начале списка
-        DoubleLinkedListStack<String> originalList3 = originalLists.getList(2);
-
-        originalList3.remove(originalList3, "one");
-
-        DoubleLinkedListStack<String> listResultExpected3 = new DoubleLinkedListStack<>();
-        String[] listArgs3 = {"five", "four", "three", "two", };
-        for (String i : listArgs3) {
-            listResultExpected3.push(i);
-        }
-
-        assertTrue(originalList3.equals(listResultExpected3));
-
         // Тест на перехват ошибки при удалении отсутствующего в списке элемента
-        DoubleLinkedListStack<String> originalList4 = originalLists.getList(3);
+        DoubleLinkedListStack<String> originalList3 = originalLists.getList(3);
 
         try {
-            originalList4.remove(originalList4, "notExistedElement");
+            originalList3.remove(originalList3, "notExistedElement");
             fail("Should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
 
         // Тест на перехват ошибки при удалении в пустом списке
-        DoubleLinkedListStack<String> originalList5 = new DoubleLinkedListStack<>();
+        DoubleLinkedListStack<String> emptyList0 = new DoubleLinkedListStack<>();
 
         try {
-            originalList5.removeAfter("one");
+            emptyList0.removeAfter("one");
             fail("Should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
 
         // Тест на успешное удаление всех элементов списка
         // (проверка size() на равность нулю)
-        DoubleLinkedListStack<String> originalList6 = originalLists.getList(4);
-        String[] listArgsToRemove1 = {"five", "four", "three", "two", "one", };
+        DoubleLinkedListStack<String> originalList4 = originalLists.getList(4);
+        String[] listArgsToRemove0 = {"five", "four", "three", "two", "one", };
 
-        for(String arg : listArgsToRemove1) {
-            originalList6.remove(originalList6, arg);
+        for(String arg : listArgsToRemove0) {
+            originalList4.remove(originalList4, arg);
         }
 
-        assertEquals(0, originalList6.size());
+        assertEquals(0, originalList4.size());
 
         // Тест на успешное удаление всех элементов списка
         // (проверка на отсутствие элементов в списке)
-        DoubleLinkedListStack<String> originalList7 = originalLists.getList(5);
-        DoubleLinkedListStack<String> originalList8 = new DoubleLinkedListStack<>();
-        String[] listArgsToRemove2 = {"five", "four", "three", "two", "one", };
+        DoubleLinkedListStack<String> originalList5 = originalLists.getList(5);
+        DoubleLinkedListStack<String> emptyList1 = new DoubleLinkedListStack<>();
+        String[] listArgsToRemove1 = {"five", "four", "three", "two", "one", };
 
-        for(String arg : listArgsToRemove2) {
-            originalList7.remove(originalList7, arg);
+        for(String arg : listArgsToRemove1) {
+            originalList5.remove(originalList5, arg);
         }
 
-        assertTrue(originalList7.equals(originalList8));
+        assertTrue(originalList5.equals(emptyList1));
     }
 
     @Test
@@ -215,8 +215,8 @@ public class DoubleLinkedListStackTest {
         originalList0.insertAfter("three", "threethree");
 
         DoubleLinkedListStack<String> listResultExpected0 = new DoubleLinkedListStack<>();
-        String[] listArgs1 = {"five", "four", "threethree", "three", "two", "one", };
-        for (String i : listArgs1) {
+        String[] listArgs0 = {"five", "four", "threethree", "three", "two", "one", };
+        for (String i : listArgs0) {
             listResultExpected0.push(i);
         }
 
@@ -228,8 +228,8 @@ public class DoubleLinkedListStackTest {
         originalList1.insertAfter("five", "fivefive");
 
         DoubleLinkedListStack<String> listResultExpected1 = new DoubleLinkedListStack<>();
-        String[] listArgs2 = {"fivefive", "five", "four", "three", "two", "one", };
-        for (String i : listArgs2) {
+        String[] listArgs1 = {"fivefive", "five", "four", "three", "two", "one", };
+        for (String i : listArgs1) {
             listResultExpected1.push(i);
         }
 
@@ -240,13 +240,13 @@ public class DoubleLinkedListStackTest {
 
         originalList2.insertAfter("one", "oneone");
 
-        DoubleLinkedListStack<String> listResultExpected3 = new DoubleLinkedListStack<>();
-        String[] listArgs3 = {"five", "four", "three", "two", "oneone", "one", };
-        for (String i : listArgs3) {
-            listResultExpected3.push(i);
+        DoubleLinkedListStack<String> listResultExpected2 = new DoubleLinkedListStack<>();
+        String[] listArgs2 = {"five", "four", "three", "two", "oneone", "one", };
+        for (String i : listArgs2) {
+            listResultExpected2.push(i);
         }
 
-        assertTrue(originalList2.equals(listResultExpected3));
+        assertTrue(originalList2.equals(listResultExpected2));
 
         // Тест на перехват ошибки при вставке после несуществующиего элемента
         DoubleLinkedListStack<String> originalList3 = originalLists.getList(3);
@@ -257,10 +257,10 @@ public class DoubleLinkedListStackTest {
         } catch (IllegalArgumentException e) {}
 
         // Тест на перехват ошибки при вставке в пустой список
-        DoubleLinkedListStack<String> originalList4 = new DoubleLinkedListStack<>();
+        DoubleLinkedListStack<String> emptyList0 = new DoubleLinkedListStack<>();
 
         try {
-            originalList4.insertAfter("one", "inserted");
+            emptyList0.insertAfter("one", "inserted");
             fail("Should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
@@ -317,10 +317,10 @@ public class DoubleLinkedListStackTest {
         } catch (IllegalArgumentException e) {}
 
         // Тест на перехват ошибки при вставке в пустой список
-        DoubleLinkedListStack<String> originalList4 = new DoubleLinkedListStack<>();
+        DoubleLinkedListStack<String> emptyList0 = new DoubleLinkedListStack<>();
 
         try {
-            originalList4.insertAfter("one", "inserted");
+            emptyList0.insertAfter("one", "inserted");
             fail("Should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {}
     }
