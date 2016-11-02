@@ -78,7 +78,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         // Remove Node from this linked-list stack after
         // Node with item of itemToRemoveAfter
         // Начальное значение для перехода к искомому Node,
-        // после которого нужно вставить элемент
+        // после которого нужно удалить элемент
         Node nodeToRemoveAfter = this.first;
 
         // Переход к искомому Node
