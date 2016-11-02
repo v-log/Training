@@ -18,6 +18,7 @@ insert after a given node, and remove a given node. */
 public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
     private DoubleNode first; // top of stack (most recently added node)
+    private DoubleNode last;
     private int N; // number of items
 
     private class DoubleNode {
@@ -43,8 +44,11 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         first = new DoubleNode();
         first.item = item;
         first.next = oldfirst;
-        if(oldfirst != null) {
+        if (oldfirst != null) {
             oldfirst.previous = first;
+        }
+        if (first.next == null) {
+            last = first;
         }
         N++;
     }
@@ -53,7 +57,14 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
         // Remove item from top of stack.
         Item item = first.item;
+
+        if (first.next != null) {
+            first.next.previous = null;
+        } else {
+            last = first;
+        }
         first = first.next;
+
         N--;
         return item;
     }
@@ -61,31 +72,21 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
     public void insertAtBeginning(Item itemToInsert) {
 
         // Вставить значение в начало списка
-        this.push(itemToInsert);
+        push(itemToInsert);
     }
 
     public void insertAtEnd(Item itemToInsert) {
 
         // Вставить значение в конец списка
+        // Новый последний элемент списка
         DoubleNode newLast = new DoubleNode();
         newLast.item = itemToInsert;
 
-        // Начальное значение DoubleNode для перехода к последнему DoubleNode
-        DoubleNode tempNode = this.first;
-
-        // Последний DoubleNode
-        DoubleNode lastNode = null;
-
-        // Переход к последнему DoubleNode
-        for (int i = 0; i < this.size(); i++) {
-            lastNode = tempNode;
-            tempNode = tempNode.next;
-        }
-
         // Добавление нового элемента в конец списка
-        if(lastNode != null) {
-            lastNode.next = newLast;
-            newLast.previous = lastNode;
+        if(last != null) {
+            last.next = newLast;
+            newLast.previous = last;
+            last = newLast;
         }
         N++;
     }
@@ -93,26 +94,29 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
     public void removeFromBeginning() {
 
         // Если в списке нет элементов, бросить исключение
-        if(this.isEmpty()) throw new IndexOutOfBoundsException("List is empty");
-        this.pop();
+        if(this.isEmpty()) {
+            throw new IndexOutOfBoundsException("List is empty");
+        }
+        pop();
     }
 
     public void removeFromEnd() {
 
-        // Начальное значение DoubleNode для перехода к предпоследнему DoubleNode
-        DoubleNode tempNode = this.first;
-        // Предпоследний DoubleNode
-        DoubleNode penult = null;
-
         // Если в списке нет элементов, бросить исключение
         if(this.isEmpty()) throw new IndexOutOfBoundsException("List is empty");
 
-        // Переход к предпоследнему DoubleNode
-        penult = getDoubleNodeAt(this.size() - 2);
-
-        // Обнуление ссылки на следующий элемент у предпоследнего элемента списка
-        if(penult != null && penult.next != null) {
-            penult.next = null;
+        // Удаление последнего элемента
+        // Если последний и первый - не один и тот же элемент,
+        // обнуляем ссылку у предпоследнего элемента на последний
+        // и делаем предпоследний элемент последним.
+        // Иначе (если в списке остался только один элемент),
+        // обнуляем ссылки на этот элемент.
+        if (last != first) {
+            last.previous.next = null;
+            last = last.previous;
+        } else {
+            last = null;
+            first = null;
         }
 
         N--;
@@ -120,19 +124,29 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
     public void removeAfter(Item itemToRemoveAfter) throws IllegalArgumentException {
 
-        // Remove DoubleNode from this linked-list stack after DoubleNode with item of itemToRemoveAfter
-        // Индекс искомого DoubleNode с item равным itemToRemoveAfter
-        int indexToRemoveAfter = indexSearch(itemToRemoveAfter);
+        // Remove DoubleNode from this linked-list stack after
+        // DoubleNode with item of itemToRemoveAfter
+        // Начальное значение для перехода к искомому DoubleNode,
+        // после которого нужно удалить элемент
+        DoubleNode nodeToRemoveAfter = this.first;
+
+        // Переход к искомому DoubleNode
+        while (nodeToRemoveAfter != null) {
+
+            // При наличии совпадения прервать поиск
+            if (nodeToRemoveAfter.item.equals(itemToRemoveAfter)) {
+                break;
+            }
+
+            nodeToRemoveAfter = nodeToRemoveAfter.next;
+        }
 
         // Если искомый элемент не найден, бросить соответствующее исключение
-        if(indexToRemoveAfter == -1) throw new IllegalArgumentException("List " + this
+        if(nodeToRemoveAfter == null) throw new IllegalArgumentException("List " + this
                 + " does not contain \"" + itemToRemoveAfter.toString() + "\"");
 
-        // Искомый DoubleNode
-        DoubleNode resultNode = getDoubleNodeAt(indexToRemoveAfter);
-
         // Обращение к внутреннему методу для совершения операции удаления
-        this.removeAfterInner(resultNode);
+        removeAfterInner(nodeToRemoveAfter);
     }
 
     private void removeAfterInner(DoubleNode nodeToRemoveAfter) throws IndexOutOfBoundsException {
@@ -149,25 +163,35 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
     public void insertAfter(Item itemToInsertAfter, Item itemToInsert) throws IllegalArgumentException {
 
-        // Insert DoubleNode from this Linked-List Stack after DoubleNode with item <itemToInsertAfter>
-        // Вставляемый DoubleNode
-        DoubleNode nodeToInsert = new DoubleNode();
-        nodeToInsert.item = itemToInsert;
+        // Insert DoubleNode from this Linked-List Stack after
+        // DoubleNode with item <itemToInsertAfter>
+        // Начальное значение для перехода к искомому DoubleNode,
+        // после которого нужно вставить элемент
+        DoubleNode nodeToInsertAfter = this.first;
 
-        // Индекс искомого DoubleNode с item равным itemToInsertAfter
-        int indexToInsertAfter = indexSearch(itemToInsertAfter);
+        // Переход к искомому DoubleNode
+        while (nodeToInsertAfter != null) {
 
-        // Если искомый элемент не найден, бросить соответствующее исключение
-        if(indexToInsertAfter == -1) {
+            // При наличии совпадения прервать поиск
+            if (nodeToInsertAfter.item.equals(itemToInsertAfter)) {
+                break;
+            }
+
+            nodeToInsertAfter = nodeToInsertAfter.next;
+        }
+
+        // Если искомый элемент не найден, бросить исключение
+        if (nodeToInsertAfter == null) {
             throw new IllegalArgumentException("List \"" + this
                     + "\" does not contain \"" + itemToInsertAfter.toString() + "\"");
         }
 
-        // Искомый DoubleNode
-        DoubleNode resultNode = getDoubleNodeAt(indexToInsertAfter);
+        // Вставляемый элемент
+        DoubleNode nodeToInsert = new DoubleNode();
+        nodeToInsert.item = itemToInsert;
 
         // Обращение к внутреннему методу для совершения операции вставки
-        this.insertAfterInner(resultNode, nodeToInsert);
+        insertAfterInner(nodeToInsertAfter, nodeToInsert);
     }
 
     private void insertAfterInner(DoubleNode nodeToInsertAfter, DoubleNode nodeToInsert) {
@@ -194,25 +218,35 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
     public void insertBefore(Item itemToInsertBefore, Item itemToInsert) throws IllegalArgumentException {
 
-        // Insert DoubleNode from this Linked-List Stack before DoubleNode with item <itemToInsertAfter>
-        // Вставляемый DoubleNode
-        DoubleNode nodeToInsert = new DoubleNode();
-        nodeToInsert.item = itemToInsert;
+        // Insert DoubleNode from this Linked-List Stack before
+        // DoubleNode with item <itemToInsertAfter>
+        // Начальное значение для перехода к искомому DoubleNode,
+        // после которого нужно вставить элемент
+        DoubleNode nodeToInsertBefore = this.first;
 
-        // Индекс искомого DoubleNode с item равным itemToInsertBefore
-        int indexToInsertBefore = indexSearch(itemToInsertBefore);
+        // Переход к искомому DoubleNode
+        while (nodeToInsertBefore != null) {
 
-        // Если искомый элемент не найден, бросить соответствующее исключение
-        if(indexToInsertBefore == -1) {
+            // При наличии совпадения прервать поиск
+            if (nodeToInsertBefore.item.equals(itemToInsertBefore)) {
+                break;
+            }
+
+            nodeToInsertBefore = nodeToInsertBefore.next;
+        }
+
+        // Если искомый элемент не найден, бросить исключение
+        if (nodeToInsertBefore == null) {
             throw new IllegalArgumentException("List \"" + this
                     + "\" does not contain \"" + itemToInsertBefore.toString() + "\"");
         }
 
-        // Искомый DoubleNode
-        DoubleNode resultNode = getDoubleNodeAt(indexToInsertBefore);
+        // Вставляемый элемент
+        DoubleNode nodeToInsert = new DoubleNode();
+        nodeToInsert.item = itemToInsert;
 
         // Обращение к внутреннему методу для совершения операции вставки
-        this.insertBeforeInner(resultNode, nodeToInsert);
+        insertBeforeInner(nodeToInsertBefore, nodeToInsert);
     }
 
     private void insertBeforeInner(DoubleNode nodeToInsertBefore, DoubleNode nodeToInsert) {
@@ -268,43 +302,6 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
             throw new IllegalArgumentException("List \""
                     + this + "\" does not contain \"" + key + "\"");
         }
-    }
-
-    private int indexSearch(Item itemToSearch) {
-
-        // Inner method to get index of searched item
-        // Индекс искомого DoubleNode с item равным itemToSearch
-        int indexSearchTemp = -1;
-        int indexSearch = -1;
-
-        // Поиск DoubleNode с item равным itemToSearch
-        for(Item args : this) {
-            if(!args.equals(itemToSearch)) {
-                indexSearchTemp++;
-            } else {
-                indexSearchTemp++;
-                indexSearch = indexSearchTemp;
-                break;
-            }
-        }
-
-        return indexSearch;
-    }
-
-    private DoubleNode getDoubleNodeAt(int index) {
-
-        // Inner method to get Double Node at <index>
-        // Начальное значение DoubleNode для искомого DoubleNode
-        DoubleNode tempNode = this.first;
-        // Искомый DoubleNode
-        DoubleNode resultNode = null;
-
-        // Определение искомого DoubleNode
-        for (int i = 0; i < index + 1; i++) {
-            resultNode = tempNode;
-            tempNode = tempNode.next;
-        }
-        return resultNode;
     }
 
     public Iterator<Item> iterator() {

@@ -72,7 +72,7 @@ public class DoubleLinkedListStackTest {
 
     @Test
     public void removeFromBeginningTest() throws Exception {
-        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(1);
+        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(2);
 
         // Тест на успешное удаление элемента из начала списка
         DoubleLinkedListStack<String> originalList0 = originalLists.getList(0);
@@ -94,11 +94,21 @@ public class DoubleLinkedListStackTest {
             emptyList0.removeFromBeginning();
             fail("Should throw IndexOutOfBoundsException");
         } catch (IndexOutOfBoundsException e) {}
+
+        // Тест на успешное удаление всех элементов списка
+        DoubleLinkedListStack<String> originalList1 = originalLists.getList(1);
+
+        int size = originalList1.size();
+        for (int i = 0; i < size; i++) {
+            originalList1.removeFromBeginning();
+        }
+
+        assertTrue(originalList1.isEmpty());
     }
 
     @Test
     public void removeFromEndTest() throws Exception {
-        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(1);
+        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(2);
 
         // Тест на успешное удаление элемента из начала списка
         DoubleLinkedListStack<String> originalList0 = originalLists.getList(0);
@@ -117,14 +127,28 @@ public class DoubleLinkedListStackTest {
         DoubleLinkedListStack<String> emptyList0 = new DoubleLinkedListStack<>();
 
         try {
-            emptyList0.removeFromBeginning();
+            emptyList0.removeFromEnd();
             fail("Should throw IndexOutOfBoundsException");
         } catch (IndexOutOfBoundsException e) {}
+
+        // Тест на успешное удаление всех элементов списка
+        DoubleLinkedListStack<String> originalList1 = originalLists.getList(1);
+
+        int size = originalList1.size();
+        for (int i = 0; i < size; i++) {
+            originalList1.removeFromEnd();
+        }
+
+        for(String args : originalList1) {
+            System.out.print(args + " ");
+        }
+
+        assertTrue(originalList1.isEmpty());
     }
 
     @Test
     public void removeTest() throws Exception {
-        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(6);
+        DoubleListsArrayForTests originalLists = new DoubleListsArrayForTests(7);
 
         // Тест на успешное удаление элемента в середине списка
         DoubleLinkedListStack<String> originalList0 = originalLists.getList(0);
@@ -203,6 +227,17 @@ public class DoubleLinkedListStackTest {
         }
 
         assertTrue(originalList5.equals(emptyList1));
+
+        // Тест на успешное удаление всех элементов списка
+        // ( проверка через isEmpty() )
+        DoubleLinkedListStack<String> originalList6 = originalLists.getList(6);
+        String[] listArgsToRemove2 = {"five", "four", "three", "two", "one", };
+
+        for(String arg : listArgsToRemove2) {
+            originalList6.remove(originalList6, arg);
+        }
+
+        assertTrue(originalList6.isEmpty());
     }
 
     @Test
