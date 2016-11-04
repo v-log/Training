@@ -73,31 +73,40 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         return item;
     }
 
-    public void removeAfter(Item itemToRemoveAfter) throws IllegalArgumentException {
+    private Node searchNode(Item itemToSearch) throws IllegalArgumentException {
 
-        // Remove Node from this linked-list stack after
-        // Node with item of itemToRemoveAfter
-        // Начальное значение для перехода к искомому Node,
-        // после которого нужно удалить элемент
-        Node nodeToRemoveAfter = this.first;
+        // Поиск Node из списка по значению Item
+        // Начальное значение для перехода к искомому Node
+        Node resultNode = first;
 
-        // Переход к искомому Node
-        while (nodeToRemoveAfter != null) {
+        while (resultNode != null) {
 
             // При наличии совпадения прервать поиск
-            if (nodeToRemoveAfter.item.equals(itemToRemoveAfter)) {
+            if (resultNode.item.equals(itemToSearch)) {
                 break;
             }
 
-            nodeToRemoveAfter = nodeToRemoveAfter.next;
+            resultNode = resultNode.next;
         }
 
         // Если искомый элемент не найден, бросить соответствующее исключение
-        if(nodeToRemoveAfter == null) throw new IllegalArgumentException("List " + this
-                + " does not contain \"" + itemToRemoveAfter.toString() + "\"");
+        if(resultNode == null) {
+            throw new IllegalArgumentException("List " + this
+                    + " does not contain \"" + itemToSearch.toString() + "\"");
+        }
+
+        return resultNode;
+    }
+
+    public void removeAfter(Item itemToRemoveAfter) {
+
+        // Remove Node from this linked-list stack after
+        // Node with item of itemToRemoveAfter
+        // Node, после которого удаляется элемент
+        Node nodeToRemoveAfter = searchNode(itemToRemoveAfter);
 
         // Обращение к внутреннему методу для совершения операции удаления
-        this.removeAfterInner(nodeToRemoveAfter);
+        removeAfterInner(nodeToRemoveAfter);
     }
 
     private void removeAfterInner(Node nodeToRemoveAfter)
@@ -113,31 +122,12 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         }
     }
 
-    public void insertAfter(Item itemToInsertAfter, Item itemToInsert)
-            throws IllegalArgumentException {
+    public void insertAfter(Item itemToInsertAfter, Item itemToInsert) {
 
         // Insert Node from this Linked-List Stack after Node with
         // item <itemToInsertAfter>
-        // Начальное значение для перехода к искомому Node,
-        // после которого нужно вставить элемент
-        Node nodeToInsertAfter = this.first;
-
-        // Переход к искомому Node
-        while (nodeToInsertAfter != null) {
-
-            // При наличии совпадения прервать поиск
-            if (nodeToInsertAfter.item.equals(itemToInsertAfter)) {
-                break;
-            }
-
-            nodeToInsertAfter = nodeToInsertAfter.next;
-        }
-
-        // Если искомый элемент не найден, бросить исключение
-        if (nodeToInsertAfter == null) {
-            throw new IllegalArgumentException("List \"" + this
-                    + "\" does not contain \"" + itemToInsertAfter.toString() + "\"");
-        }
+        // Node, после которого вставляется элемент
+        Node nodeToInsertAfter = searchNode(itemToInsertAfter);
 
         // Вставляемый элемент
         Node nodeToInsert = new Node();
@@ -158,7 +148,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         }
     }
 
-    public void remove(LinkedListStack<Item> list, String key) {
+    public void remove(LinkedListStack<Item> list, String key) throws IllegalArgumentException {
 
         // Remove from Linked-List Stack <list> a Node with string item "key"
         // Счетчик несовпадения удаляемого элемента при проходе по списку
@@ -166,7 +156,9 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         int noMatchCount = 0;
         // Фиксирование изначального размера списка
         // (для определения неверно введенного <key>)
-        int listSize = this.size();
+        int listSize = size();
+        // Флаг наличия удаления из списка
+        boolean deleted = false;
         Iterator<Item> iter = list.iterator();
 
         // Поиск и удаление Node из <list> при совпадении <item> с <key>
@@ -175,14 +167,12 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
             if ( curr.equals(key) ) {
                 iter.remove();
-                N--;
-            } else {
-                noMatchCount++;
+                deleted = true;
             }
         }
 
         // Если удаляемый элемент отсутствует в списке <list>, бросить исключение
-        if(noMatchCount == listSize) {
+        if (!deleted) {
             throw new IllegalArgumentException("List \""
                     + this + "\" does not contain \"" + key + "\"");
         }
@@ -209,6 +199,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
             } else {
                 prev.next = current;
             }
+            N--;
         }
 
         public Item next() {
@@ -228,11 +219,11 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
         LinkedListStack<Item> listToCompareWith = (LinkedListStack<Item>) x;
 
-        if(this.size() != listToCompareWith.size()) return false;
+        if(size() != listToCompareWith.size()) return false;
 
         Iterator<Item> iterator2 = listToCompareWith.iterator();
 
-        for(Iterator<Item> iterator1 = this.iterator(); iterator1.hasNext();) {
+        for(Iterator<Item> iterator1 = iterator(); iterator1.hasNext();) {
             if (!iterator1.next().equals(iterator2.next())) {
                 return false;
             }
