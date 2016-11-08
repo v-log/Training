@@ -151,17 +151,11 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     public void remove(LinkedListStack<Item> list, String key) throws IllegalArgumentException {
 
         // Remove from Linked-List Stack <list> a Node with string item "key"
-        // Счетчик несовпадения удаляемого элемента при проходе по списку
-        // (для определения неверно введенного <key>)
-        int noMatchCount = 0;
-        // Фиксирование изначального размера списка
-        // (для определения неверно введенного <key>)
-        int listSize = size();
         // Флаг наличия удаления из списка
         boolean deleted = false;
         Iterator<Item> iter = list.iterator();
 
-        // Поиск и удаление Node из <list> при совпадении <item> с <key>
+        // Поиск и удаление Node из <list> при совпадении <iter> с <key>
         while (iter.hasNext()) {
             Item curr = iter.next();
 
@@ -171,7 +165,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
             }
         }
 
-        // Если удаляемый элемент отсутствует в списке <list>, бросить исключение
+        // Если удаляемый элемент отсутствует в списке, бросить исключение
         if (!deleted) {
             throw new IllegalArgumentException("List \""
                     + this + "\" does not contain \"" + key + "\"");

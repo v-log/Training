@@ -194,7 +194,7 @@ public class LinkedListStackTest {
         assertEquals(0, originalList4.size());
 
         // Тест на успешное удаление всех элементов списка
-        // (проверка на отсутствие элементов в спике)
+        // (проверка на отсутствие элементов в списке)
         LinkedListStack<String> originalList5 = originalLists.getList(5);
         LinkedListStack<String> emptyList1 = new LinkedListStack<>();
         String[] listArgsToRemove1 = {"five", "four", "three", "two", "one", };
