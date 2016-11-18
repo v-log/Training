@@ -15,18 +15,30 @@ insert at the beginning, insert at the end, remove from the beginning,
 remove from the end, insert before a given node,
 insert after a given node, and remove a given node. */
 
-public class DoubleLinkedListStack<Item> implements Iterable<Item> {
+public class DoubleLinkedListStack<Item> implements Iterable<DoubleLinkedListStack<Item>.DoubleNode> {
 
     private DoubleNode first; // top of stack (most recently added node)
     private DoubleNode last;
     private int N; // number of items
 
-    private class DoubleNode {
+    public class DoubleNode {
 
         // nested class to define nodes
-        Item item;
-        DoubleNode previous;
-        DoubleNode next;
+        private Item item;
+        private DoubleNode previous;
+        private DoubleNode next;
+
+        public Item getItem() {
+            return item;
+        }
+
+        public DoubleNode getNext() {
+            return next;
+        }
+
+        public DoubleNode getPrevious() {
+            return previous;
+        }
     }
 
     public boolean isEmpty() {
@@ -37,6 +49,14 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         return N;
     }
 
+    public DoubleNode getFirst() {
+        return first;
+    }
+
+    public DoubleNode getLast() {
+        return last;
+    }
+
     public void push(Item item) {
 
         // Add item to top of stack.
@@ -44,12 +64,15 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         first = new DoubleNode();
         first.item = item;
         first.next = oldfirst;
+
         if (oldfirst != null) {
             oldfirst.previous = first;
         }
+
         if (first.next == null) {
             last = first;
         }
+
         N++;
     }
 
@@ -58,63 +81,105 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         // Remove item from top of stack.
         Item item = first.item;
 
+        // Если в списке больше одного элемента, обнулить ссылку у второго
+        // элемента на первый и приравнять первый ко второму.
         if (first.next != null) {
             first.next.previous = null;
+            first = first.next;
         } else {
-            last = first;
+            // Иначе (если в списке один элемент) обнулить и первый и, что то же самое,
+            // последний.
+            first = null;
+            last = null;
         }
-        first = first.next;
 
         N--;
+
         return item;
     }
 
-    public void insertAtBeginning(Item itemToInsert) {
+    public void insertAtBeginning(DoubleNode newFirst) throws IllegalArgumentException {
 
-        // Вставить значение в начало списка
-        push(itemToInsert);
-    }
+        // Вставка элемента в начало списка
+        // Если вставляемый элемент - нулевой, бросить исключение
+        if (newFirst == null) throw new IllegalArgumentException("New element is null");
 
-    public void insertAtEnd(Item itemToInsert) {
-
-        // Вставить значение в конец списка
-        // Новый последний элемент списка
-        DoubleNode newLast = new DoubleNode();
-        newLast.item = itemToInsert;
-
-        // Добавление нового элемента в конец списка
-        if(last != null) {
-            last.next = newLast;
-            newLast.previous = last;
-            last = newLast;
+        // Если список пустой, вставляемый элемент -
+        // первый и последний
+        if (first == null) {
+            first = newFirst;
+            last = newFirst;
+            newFirst.next = null;
+            newFirst.previous = null;
+        } else {
+            // Иначе, если в списке один элемент
+            if (first == last) {
+                first = newFirst;
+                first.next = last;
+            } else {
+                // Иначе, если в списке несколько элементов
+                newFirst.next = first;
+                newFirst.previous = null;
+                first.previous = newFirst;
+                first = newFirst;
+            }
         }
+
         N++;
     }
 
-    public void removeFromBeginning() {
+    public void insertAtEnd(DoubleNode newLast) throws IllegalArgumentException {
 
+        // Вставка элемента в конец списка
+        // Если вставляемый элемент - нулевой, бросить исключение
+        if (newLast == null) throw new IllegalArgumentException("New element is null");
+
+        // Добавление нового элемента в конец списка
+        // Если в списке есть элементы, новый элемент
+        // вставляется после last
+        if (last != null) {
+            last.next = newLast;
+            newLast.previous = last;
+            last = newLast;
+        } else {
+            // Иначе вставляемый элемент - первый и последний
+            first = newLast;
+            last = newLast;
+            newLast.next = null;
+            newLast.previous = null;
+        }
+
+        N++;
+    }
+
+    public void removeFromBeginning() throws IndexOutOfBoundsException {
+
+        // Удаление первого элемента из списка
         // Если в списке нет элементов, бросить исключение
-        if(this.isEmpty()) {
+        if(isEmpty()) {
             throw new IndexOutOfBoundsException("List is empty");
         }
+
         pop();
     }
 
-    public void removeFromEnd() {
-
-        // Если в списке нет элементов, бросить исключение
-        if(this.isEmpty()) throw new IndexOutOfBoundsException("List is empty");
+    public void removeFromEnd() throws IndexOutOfBoundsException {
 
         // Удаление последнего элемента
+        // Если в списке нет элементов, бросить исключение
+        if(isEmpty()) {
+            throw new IndexOutOfBoundsException("List is empty");
+        }
+
         // Если последний и первый - не один и тот же элемент,
         // обнуляем ссылку у предпоследнего элемента на последний
-        // и делаем предпоследний элемент последним.
-        // Иначе (если в списке остался только один элемент),
-        // обнуляем ссылки на этот элемент.
+        // и делаем предпоследний элемент последним,
         if (last != first) {
             last.previous.next = null;
             last = last.previous;
         } else {
+            // Иначе (если в списке остался только один элемент)
+            // обнуляем ссылки на этот элемент.
             last = null;
             first = null;
         }
@@ -122,136 +187,59 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         N--;
     }
 
-    public void removeAfter(Item itemToRemoveAfter) throws IllegalArgumentException {
+    public void removeAfter(DoubleNode nodeToRemoveAfter) throws IllegalArgumentException {
 
-        // Remove DoubleNode from this linked-list stack after
-        // DoubleNode with item of itemToRemoveAfter
-        // Начальное значение для перехода к искомому DoubleNode,
-        // после которого нужно удалить элемент
-        DoubleNode nodeToRemoveAfter = this.first;
-
-        // Переход к искомому DoubleNode
-        while (nodeToRemoveAfter != null) {
-
-            // При наличии совпадения прервать поиск
-            if (nodeToRemoveAfter.item.equals(itemToRemoveAfter)) {
-                break;
-            }
-
-            nodeToRemoveAfter = nodeToRemoveAfter.next;
+        // Удаление после переданного элемента
+        // Если переданный или последующий элемент - нулевые,
+        // бросить исключение
+        if ( nodeToRemoveAfter == null || nodeToRemoveAfter.next == null ) {
+            throw new IllegalArgumentException("This or the next element is null");
         }
 
-        // Если искомый элемент не найден, бросить соответствующее исключение
-        if(nodeToRemoveAfter == null) throw new IllegalArgumentException("List " + this
-                + " does not contain \"" + itemToRemoveAfter.toString() + "\"");
-
-        // Обращение к внутреннему методу для совершения операции удаления
-        removeAfterInner(nodeToRemoveAfter);
+        // Удаляемый элемент
+        DoubleNode nodeToRemove = nodeToRemoveAfter.next;
+        remove(nodeToRemove);
     }
 
-    private void removeAfterInner(DoubleNode nodeToRemoveAfter) throws IndexOutOfBoundsException {
+    public void insertAfter(DoubleNode nodeToInsertAfter, DoubleNode nodeToInsert)
+            throws IllegalArgumentException {
 
-        // Inner method for removeAfter()
-        if ( nodeToRemoveAfter != null && nodeToRemoveAfter.next != null ) {
-            DoubleNode nodeToRemove = nodeToRemoveAfter.next;
-            nodeToRemoveAfter.next = nodeToRemove.next;
-            N--;
-        } else {
-            throw new IndexOutOfBoundsException("This or the next element is null");
-        }
-    }
-
-    public void insertAfter(Item itemToInsertAfter, Item itemToInsert) throws IllegalArgumentException {
-
-        // Insert DoubleNode from this Linked-List Stack after
-        // DoubleNode with item <itemToInsertAfter>
-        // Начальное значение для перехода к искомому DoubleNode,
-        // после которого нужно вставить элемент
-        DoubleNode nodeToInsertAfter = this.first;
-
-        // Переход к искомому DoubleNode
-        while (nodeToInsertAfter != null) {
-
-            // При наличии совпадения прервать поиск
-            if (nodeToInsertAfter.item.equals(itemToInsertAfter)) {
-                break;
-            }
-
-            nodeToInsertAfter = nodeToInsertAfter.next;
-        }
-
-        // Если искомый элемент не найден, бросить исключение
-        if (nodeToInsertAfter == null) {
-            throw new IllegalArgumentException("List \"" + this
-                    + "\" does not contain \"" + itemToInsertAfter.toString() + "\"");
-        }
-
-        // Вставляемый элемент
-        DoubleNode nodeToInsert = new DoubleNode();
-        nodeToInsert.item = itemToInsert;
-
-        // Обращение к внутреннему методу для совершения операции вставки
-        insertAfterInner(nodeToInsertAfter, nodeToInsert);
-    }
-
-    private void insertAfterInner(DoubleNode nodeToInsertAfter, DoubleNode nodeToInsert) {
-
-        // Inner method for insertAfter()
+        // Вставка переданного nodeToInsert после переданного nodeToInsertAfter
+        // Если переданные элементы - ненулевые,
+        // вставить nodeToInsert после nodeToInsertAfter
         if ( nodeToInsertAfter != null && nodeToInsert != null ) {
 
-            // Первоначальный элемент перед nodeToInsertBefore,
+            // Первоначальный элемент после nodeToInsertAfter,
             // вместо которого вставляется nodeToInsert
             DoubleNode oldNext = nodeToInsertAfter.next;
 
             // Если nodeToInsertAfter - не последний элемент списка,
-            // вставляем nodeToInsert между двумя элементами
+            // вставить nodeToInsert между двумя элементами,
             if (oldNext != null) {
                 oldNext.previous = nodeToInsert;
                 nodeToInsert.next = oldNext;
+            } else {
+                // иначе вставить после последнего элемента
+                nodeToInsert.next = null;
+                last = nodeToInsert;
             }
 
             nodeToInsertAfter.next = nodeToInsert;
             nodeToInsert.previous = nodeToInsertAfter;
+
             N++;
+        } else {
+            // Иначе бросить исключение
+            throw new IllegalArgumentException("One of the arguments is null");
         }
     }
 
-    public void insertBefore(Item itemToInsertBefore, Item itemToInsert) throws IllegalArgumentException {
+    public void insertBefore(DoubleNode nodeToInsertBefore, DoubleNode nodeToInsert)
+            throws IllegalArgumentException {
 
-        // Insert DoubleNode from this Linked-List Stack before
-        // DoubleNode with item <itemToInsertAfter>
-        // Начальное значение для перехода к искомому DoubleNode,
-        // после которого нужно вставить элемент
-        DoubleNode nodeToInsertBefore = this.first;
-
-        // Переход к искомому DoubleNode
-        while (nodeToInsertBefore != null) {
-
-            // При наличии совпадения прервать поиск
-            if (nodeToInsertBefore.item.equals(itemToInsertBefore)) {
-                break;
-            }
-
-            nodeToInsertBefore = nodeToInsertBefore.next;
-        }
-
-        // Если искомый элемент не найден, бросить исключение
-        if (nodeToInsertBefore == null) {
-            throw new IllegalArgumentException("List \"" + this
-                    + "\" does not contain \"" + itemToInsertBefore.toString() + "\"");
-        }
-
-        // Вставляемый элемент
-        DoubleNode nodeToInsert = new DoubleNode();
-        nodeToInsert.item = itemToInsert;
-
-        // Обращение к внутреннему методу для совершения операции вставки
-        insertBeforeInner(nodeToInsertBefore, nodeToInsert);
-    }
-
-    private void insertBeforeInner(DoubleNode nodeToInsertBefore, DoubleNode nodeToInsert) {
-
-        // Iner method for insertBefore()
+        // Вставка переданного nodeToInsert перед переданным nodeToInsertBefore
+        // Если переданные элементы - ненулевые,
+        // вставить nodeToInsert перед nodeToInsertBefore
         if ( nodeToInsertBefore != null && nodeToInsert != null) {
 
             // Первоначальный элемент перед nodeToInsertBefore,
@@ -259,56 +247,64 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
             DoubleNode oldPrevious = nodeToInsertBefore.previous;
 
             // Если nodeToInsertBefore - не первый элемент списка,
-            // вставляем nodeToInsert между двумя элементами,
-            // иначе используем push()
+            // вставить nodeToInsert между двумя элементами,
             if (oldPrevious != null) {
                 oldPrevious.next = nodeToInsert;
                 nodeToInsert.previous = oldPrevious;
-                N++;
             } else {
-                push(nodeToInsert.item);
+                // иначе вставить перед первым элементом
+                nodeToInsert.previous = null;
+                first = nodeToInsert;
             }
 
             nodeToInsertBefore.previous = nodeToInsert;
             nodeToInsert.next = nodeToInsertBefore;
+
+            N++;
+        } else {
+            // Иначе (если переданный элемент - нулевой) бросить исключение
+            throw new IllegalArgumentException("One of the arguments is null");
         }
     }
 
-    public void remove(DoubleLinkedListStack<Item> list, String key) {
+    public void remove(DoubleNode nodeToRemove) throws IllegalArgumentException {
 
-        // Remove from Double Linked-List Stack <list> a DoubleNode with string item "key"
-        // Счетчик несовпадения удаляемого элемента при проходе по списку
-        // (для определения неверно введенного <key>)
-        int noMatchCount = 0;
-        // Фиксирование изначального размера списка
-        // (для определения неверно введенного <key>)
-        int listSize = this.size();
-        Iterator<Item> iter = list.iterator();
-
-        // Поиск и удаление DoubleNode из списка при совпадении <iter> с <key>
-        while (iter.hasNext()) {
-            Item curr = iter.next();
-
-            if ( curr.equals(key) ) {
-                iter.remove();
-                N--;
-            } else {
-                noMatchCount++;
-            }
+        // Удаление переданного элемента
+        // Если переданный элемент - нулевой,
+        // бросить исключение
+        if (nodeToRemove == null) {
+            throw new IllegalArgumentException("Argument is null");
         }
 
-        // Если удаляемый элемент отсутствует в списке , бросить исключение
-        if(noMatchCount == listSize) {
-            throw new IllegalArgumentException("List \""
-                    + this + "\" does not contain \"" + key + "\"");
+        // Если у переданного элемента имеется последующий
+        // и предыдущий элементы (т.е. он не первый и не последний),
+        // изменить ссылки у этих элементов соответственно
+        if (nodeToRemove != first && nodeToRemove != last) {
+            nodeToRemove.next.previous = nodeToRemove.previous;
+            nodeToRemove.previous.next = nodeToRemove.next;
+            N--;
+        }
+
+        // Если у переданного элемента есть последующий,
+        // но нет предыдущего элемента (т.е. он - первый)
+        // использовать pop()
+        if (nodeToRemove == first) {
+            pop();
+        }
+
+        // Если у переданного элемента нет последующего,
+        // но есть предыдущий элемент (т.е. он - последний)
+        // использовать removeFromEnd()
+        if (nodeToRemove == last) {
+            removeFromEnd();
         }
     }
 
-    public Iterator<Item> iterator() {
+    public Iterator<DoubleNode> iterator() {
         return new ListIterator();
     }
 
-    private class ListIterator implements Iterator<Item> {
+    private class ListIterator implements Iterator<DoubleNode> {
         private DoubleNode current = first;
         private DoubleNode realCurrent;
         private DoubleNode prev = null;
@@ -322,29 +318,21 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
         }
 
         public void remove() {
-
-            if ( prev == null ) {
-                realCurrent = null;
-                first = current;
-            } else {
-                prev.next = current;
-            }
+            throw new UnsupportedOperationException();
         }
 
-        public Item next() {
+        public DoubleNode next() {
             prev = realCurrent;
             realCurrent = current;
-            Item item = current.item;
             current = current.next;
-            return item;
+            return realCurrent;
         }
 
-        public Item previous() {
+        public DoubleNode previous() {
             prev = realCurrent;
             realCurrent = current;
-            Item item = current.item;
             current = current.previous;
-            return item;
+            return realCurrent;
         }
     }
 
@@ -358,10 +346,10 @@ public class DoubleLinkedListStack<Item> implements Iterable<Item> {
 
         if(this.size() != listToCompareWith.size()) return false;
 
-        Iterator<Item> iterator2 = listToCompareWith.iterator();
+        Iterator<DoubleNode> iterator2 = listToCompareWith.iterator();
 
-        for(Iterator<Item> iterator1 = this.iterator(); iterator1.hasNext();) {
-            if (!iterator1.next().equals(iterator2.next())) {
+        for(Iterator<DoubleNode> iterator1 = iterator(); iterator1.hasNext();) {
+            if (!iterator1.next().getItem().equals(iterator2.next().getItem())) {
                 return false;
             }
         }
