@@ -82,9 +82,9 @@ public class GeneralizedQueueAsArray<Item> implements Iterable<Item> {
         // сдвинуть все элементы ближе к концу очереди
         // на одну позицию ближе к началу очереди
         if ( itemToRemoveIndex < size() - 1 ) {
-            for (int i = 0; i < k - 1; i++) {
-                a[itemToRemoveIndex + i] = a[itemToRemoveIndex + i + 1];
-                a[itemToRemoveIndex + i + 1] = null;
+            for (int i = itemToRemoveIndex; i < itemToRemoveIndex + k - 1; i++) {
+                a[i] = a[i + 1];
+                a[i + 1] = null;
             }
         } else {
             // Иначе, если удаляется последний элемент в очереди,
