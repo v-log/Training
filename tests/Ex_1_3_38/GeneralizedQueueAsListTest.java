@@ -2,6 +2,7 @@ package Ex_1_3_38;
 
 import org.junit.Test;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -193,7 +194,7 @@ public class GeneralizedQueueAsListTest {
 
     @Test
     public void deleteTest() throws Exception {
-        QueueAsListAsArrayForTests originalQueues = new QueueAsListAsArrayForTests(4);
+        QueueAsListAsArrayForTests originalQueues = new QueueAsListAsArrayForTests(5);
 
         // Тест на успешное удаление элемента в середине списка
         GeneralizedQueueAsList<String> originalQueue0 = originalQueues.getQueue(0);
@@ -255,6 +256,31 @@ public class GeneralizedQueueAsListTest {
         GeneralizedQueueAsList<String> queueResultExpected3 = new GeneralizedQueueAsList<>();
 
         assertTrue(originalQueue3.equals(queueResultExpected3) && invariantTest(originalQueue3));
+
+
+        // Тест на перехват исключения при удалении из пустого списка
+        GeneralizedQueueAsList<String> originalQueue4 = new GeneralizedQueueAsList<>();
+
+        try {
+            originalQueue4.delete(1);
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+
+
+        // Тест на перехват исключения при вводе номера
+        // последнего добавленного элемента вне пределов очереди
+        GeneralizedQueueAsList<String> originalQueue5 = originalQueues.getQueue(4);
+
+        try {
+            originalQueue5.delete(0);
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+
+        try {
+            originalQueue5.delete(6);
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+
     }
 
     @Test
