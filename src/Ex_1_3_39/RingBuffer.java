@@ -16,7 +16,7 @@ to deposit data. Develop an API for a RingBuffer and an implementation that
 uses an array representation (with circular wrap-around).
 */
 
-public class RingBuffer<Item> {
+public class RingBuffer<Item> implements Iterable<Item> {
 
     // Индекс первого элемента очереди
     private int first;
