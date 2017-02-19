@@ -24,49 +24,46 @@ Hint: Use two stacks.
 
 public class TextEditorBuffer implements Iterable {
 
-    // Левый стек символов буфера, public - для тестов
+    // Левый стек символов буфера
     private StackArrayForChar leftStack;
-    // Правый стек символов буфера, public - для тестов
+    // Правый стек символов буфера
     private StackArrayForChar rightStack;
-    // Количество символов в буфере
-    private int N;
-    // Позиция указателя
-    private int pointer;
 
     TextEditorBuffer() {
         leftStack = new StackArrayForChar();
         rightStack = new StackArrayForChar();
-        N = 0;
-        pointer = leftStack.size();
     }
 
     public StackArrayForChar getLeftStack() {
+
+        // Для тестов
         return leftStack;
     }
 
     public StackArrayForChar getRightStack() {
+
+        // Для тестов
         return rightStack;
     }
 
     public int getPointer() {
-        return pointer;
+
+        // Для тестов
+        return leftStack.size();
     }
 
     public int size() {
-        return N;
+        return leftStack.size() + rightStack.size();
     }
 
     public boolean isEmpty() {
-        return N == 0;
+        return size() == 0;
     }
 
     public void insert(char c) {
 
-        // Добавление символа с на позицию указателя в буфер
+        // Добавление символа 'с' на позицию указателя в буфер
         leftStack.push(c);
-
-        pointer++;
-        N++;
     }
 
     public char delete() {
@@ -79,30 +76,28 @@ public class TextEditorBuffer implements Iterable {
         }
 
         // Если указатель находится в начале буфера, бросить исключение
-        if (pointer == 0) {
+        if (leftStack.size() == 0) {
             throw new ArrayIndexOutOfBoundsException("Pointer is at the beginning - nothing to delete");
         }
 
-        char charToReturn = leftStack.pop();
-
-        pointer--;
-        N--;
-
-        return charToReturn;
+        return leftStack.pop();
     }
 
     public void left(int k) {
 
         // Переместить указатель на k позиций влево
 
-        // Если k больше значения указателя, бросить исключение
-        if (k < 1 || k > pointer) {
-            throw new IllegalArgumentException("k should be between 1 and " + pointer + " (inclusive");
+        // Размер левого стека буфера
+        int arraySize = leftStack.size();
+
+        // Если k меньше одного или больше значения
+        // указателя, бросить исключение
+        if (k < 1 || k > arraySize) {
+            throw new IllegalArgumentException("k should be between 1 and " + arraySize + " (inclusive");
         }
 
         for (int i = 0; i < k; i++) {
             rightStack.push(leftStack.pop());
-            pointer--;
         }
     }
 
@@ -110,17 +105,17 @@ public class TextEditorBuffer implements Iterable {
 
         // Переместить указатель на k позиций вправо
 
-        // Размер массива буфера
+        // Размер правого стека буфера
         int arraySize = rightStack.size();
 
-        // Если k больше количества элементов правого стека, бросить исключение
+        // Если k меньше одного или больше количества
+        // элементов правого стека, бросить исключение
         if (k < 1 || k > arraySize) {
             throw new IllegalArgumentException("k should be between 1 and " + arraySize + " (inclusive");
         }
 
         for (int i = 0; i < k; i++) {
             leftStack.push(rightStack.pop());
-            pointer++;
         }
     }
 
@@ -133,22 +128,8 @@ public class TextEditorBuffer implements Iterable {
             throw new ArrayIndexOutOfBoundsException("Buffer is empty");
         }
 
-        // Массив для возврата
-        Character[] characterArrayToReturn = new Character[leftStack.size() + rightStack.size()];
-
-        // Объединение правого и левого стеков
-        System.arraycopy(leftStack.getStackAsArray(), 0, characterArrayToReturn, 0, leftStack.size());
-        System.arraycopy(rightStack.getInvertedStackAsArray(), 0,
-                characterArrayToReturn, leftStack.size(), rightStack.size());
-
-        char[] charArrayToReturn = new char[characterArrayToReturn.length];
-
-        // Конвертация из Character[] в char[]
-        for (int i = 0; i < characterArrayToReturn.length; i++) {
-            charArrayToReturn[i] = characterArrayToReturn[i];
-        }
-
-        return String.valueOf(charArrayToReturn);
+        return String.valueOf(leftStack.getStackAsArray()) +
+                (new StringBuilder(String.valueOf(rightStack.getStackAsArray())).reverse());
     }
 
     public Iterator iterator() {
@@ -209,21 +190,16 @@ public class TextEditorBuffer implements Iterable {
 
         buffer0.insert('a');
         buffer0.insert('b');
-        buffer0.left(2);
         buffer0.insert('c');
-        buffer0.right(1);
         buffer0.insert('d');
         buffer0.insert('k');
         buffer0.insert('l');
         buffer0.left(3);
         buffer0.insert('z');
-        buffer0.right(4);
-        buffer0.delete();
 
         String a0 = buffer0.returnBuffer();
-        char[] a1 = a0.toCharArray();
 
-        for(char arg : a1) {
+        for(char arg : a0.toCharArray()) {
             System.out.println(arg);
         }
 

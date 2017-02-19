@@ -1,5 +1,6 @@
 package Ex_1_3_44;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Iterator;
  */
 public class StackArrayForChar implements Iterable {
 
-    private Character[] a = new Character[1]; // stack items
+    private char[] a = new char[1]; // stack items
     private int N = 0; // number of items
 
     public boolean isEmpty() {
@@ -28,7 +29,7 @@ public class StackArrayForChar implements Iterable {
 
         // Добавление элемента в стек
         // Если массив заполнен, увеличить его вдвое
-        if (N == a.length) {
+        if (size() == a.length) {
             resize(2 * a.length);
         }
 
@@ -50,49 +51,34 @@ public class StackArrayForChar implements Iterable {
         // Значение удаляемого элемента для возврата
         itemToReturn = a[size() - 1];
 
-        a[size() - 1] = null;
+        a[size() - 1] = 0x00;
 
         N--;
 
         // Если размер стека стал меньше четверти массива,
         // укоротить массив вдвое
-        if ( N <= a.length / 4 ) {
+        if ( size() <= a.length / 4 ) {
             resize(a.length / 2);
         }
 
         return itemToReturn;
     }
 
-    public Character[] getStackAsArray() {
+    public char[] getStackAsArray() {
 
         // Возврат всех элементов стека в виде массива
-        Character[] arrayToReturn = new Character[size()];
-
-        System.arraycopy(a, 0, arrayToReturn, 0, size());
-
-        return arrayToReturn;
-    }
-
-    public Character[] getInvertedStackAsArray() {
-
-        // Возврат всех элементов стека в обратном
-        // порядке в виде массива
-        Character[] arrayToReturn = new Character[size()];
-
-        for (int i = 0; i < arrayToReturn.length; i++) {
-            arrayToReturn[i] = a[size() - 1 - i];
-        }
-
-        return arrayToReturn;
+        return Arrays.copyOfRange(a, 0, size());
     }
 
     private void resize(int max) {
 
         // Move stack to a new array of size max.
-        Character[] temp = new Character[max];
-        for (int i = 0; i < N; i++) {
+        char[] temp = new char[max];
+
+        for (int i = 0; i < size(); i++) {
             temp[i] = a[i];
         }
+
         a = temp;
     }
 
@@ -109,10 +95,6 @@ public class StackArrayForChar implements Iterable {
             return realCurrent != null;
         }
 
-        public boolean hasPrevious() {
-            return realCurrent != null;
-        }
-
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -120,17 +102,6 @@ public class StackArrayForChar implements Iterable {
         public Character next() {
             current = a[currentIndex++];
             if (currentIndex < a.length) {
-                realCurrent = a[currentIndex];
-            } else {
-                realCurrent = null;
-            }
-
-            return current;
-        }
-
-        public Character previous() {
-            current = a[currentIndex--];
-            if (currentIndex >= 0) {
                 realCurrent = a[currentIndex];
             } else {
                 realCurrent = null;
@@ -174,25 +145,19 @@ public class StackArrayForChar implements Iterable {
         stack1.push('z');
         stack1.pop();
         stack1.pop();
-        stack1.pop();
 
         Iterator iterator = stack1.iterator();
 
         while (iterator.hasNext()) {
-            System.out.println(iterator.next());
+            System.out.println("iter " + iterator.next());
         }
 
         System.out.println("stack el-s count = " + stack1.size());
         System.out.println("array size = " + stack1.arraySize());
 
-        Character[] a = stack1.getStackAsArray();
+        char[] a = stack1.getStackAsArray();
         for (char arg : a) {
-            System.out.println(arg);
-        }
-
-        Character[] b = stack1.getInvertedStackAsArray();
-        for (char arg : b) {
-            System.out.println(arg);
+            System.out.println("arg " + arg);
         }
     }
 }
