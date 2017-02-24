@@ -1,6 +1,6 @@
-package Ex_1_2_13_1_2_19;
+package Chapter_1.Ex_1_2_13_1_2_19;
 
-import Ex_1_2_12.SmartDate;
+import Chapter_1.Ex_1_2_12.SmartDate;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

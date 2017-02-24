@@ -1,4 +1,4 @@
-package Ex_1_3_39;
+package Chapter_1.Ex_1_3_39;
 
 /**
  * Created by vl on 07.02.17.
@@ -8,11 +8,8 @@ public class RingBufferForTests {
     private RingBuffer<String>[] ringBuffersArray;
 
     @SuppressWarnings("unchecked")
-    public RingBufferForTests(int arraySize) {
+    public RingBufferForTests(int arraySize, String[] bufferArgs) {
         ringBuffersArray = new RingBuffer[arraySize];
-
-        String[] bufferArgs = {"one", "two", "three", "four", "five",
-                "six", "seven", "eight", "nine", "ten"};
 
         for (int i = 0; i < ringBuffersArray.length; i++) {
             ringBuffersArray[i] = new RingBuffer<>(10);

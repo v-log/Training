@@ -1,4 +1,4 @@
-package Ex_1_2_12;
+package Chapter_1.Ex_1_2_12;
 
 import org.junit.Test;
 

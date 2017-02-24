@@ -1,4 +1,4 @@
-package Ex_1_3_39;
+package Chapter_1.Ex_1_3_39;
 
 import java.util.Iterator;
 
@@ -18,47 +18,49 @@ uses an array representation (with circular wrap-around).
 
 public class RingBuffer<Item> implements Iterable<Item> {
 
-    // Индекс первого элемента очереди
-    private int first;
-    // Индекс последнего элемента очереди
-    private int last;
-    // Количество элементов в очереди
-    private int N;
-    // Массив элементов очереди-буфера
+    // Индекс считываемого элемента буфера
+    private int dequeueFrom;
+    // Индекс вставляемого элемента буфера
+    private int enqueueAt;
+    // Массив элементов очереди буфера
     private Item[] items;
+    // Флаг заоплненности буфера
+    private boolean isFull;
 
     @SuppressWarnings("unchecked")
     RingBuffer(int size) {
 
         // Бросить исключение, если указан отрицательный
-        // размер массива очереди
+        // или нулевой размер буфера
         if (size <= 0) {
             throw new IllegalArgumentException("Размер " +
                     "буфера должен быть больше нуля");
         }
 
         items = (Item[]) new Object[size];
-        N = 0;
-        first = -1;
-        last = -1;
+        enqueueAt = 0;
+        dequeueFrom = 0;
+        isFull = false;
     }
 
     public boolean isEmpty() {
-        return N == 0;
+        return dequeueFrom == enqueueAt && !isFull();
     }
 
     public int size() {
-        return N;
+        int returnSize = enqueueAt >= dequeueFrom ?
+                enqueueAt - dequeueFrom : enqueueAt + items.length - dequeueFrom;
+        return isFull() ? items.length : returnSize;
     }
 
-    public int getFirstIndex() {
+    public int getDequeueFromIndex() {
         // Для тестов
-        return first;
+        return dequeueFrom;
     }
 
-    public int getLastIndex() {
+    public int getEnqueueAtIndex() {
         // Для тестов
-        return last;
+        return enqueueAt;
     }
 
     public Item[] getItems() {
@@ -66,60 +68,51 @@ public class RingBuffer<Item> implements Iterable<Item> {
         return items;
     }
 
-    public void enqueue(Item itemToEnqueue) throws ArrayIndexOutOfBoundsException {
+    private int circIncrease(int arg) {
+        return (arg + 1) % items.length;
+    }
 
-        // Добавление элемента в очередь буфера
+    private boolean isFull() {
+        return isFull;
+    }
+
+    public void enqueue(Item itemToEnqueue) throws ArrayIndexOutOfBoundsException,
+            IllegalArgumentException {
+
+        // Добавление элемента в буфер
 
         // Если буфер заполнен, бросить исключение
-        if (N == items.length) {
+        if (isFull()) {
             throw new ArrayIndexOutOfBoundsException("Буфер заполнен");
         }
 
-        // Если буфер пуст, вставить первый элемент в начало
-        // массива и установить индексы first и last на новый элемент
-        if (first == -1) {
+        // Добавить новый элемент
+        items[enqueueAt] = itemToEnqueue;
 
-            items[0] = itemToEnqueue;
-            first = 0;
-            last = 0;
-        } else {
+        enqueueAt = circIncrease(enqueueAt);
 
-            // Иначе, если буфер не пуст, вставить элемент после последнего
-            // и установить индекс last на новый элемент
-            last = circIncrease(last);
-            items[last] = itemToEnqueue;
+        if (enqueueAt == dequeueFrom) {
+            isFull = true;
         }
-
-        N++;
     }
 
     public Item dequeue() throws ArrayIndexOutOfBoundsException {
 
-        // Удаление и возврат первого элемента очереди буфера
+        // Удаление и возврат первого элемента буфера
 
         Item itemToReturn;
 
-        // Если очередь пуста, бросить исключение
-        if (N == 0) throw new ArrayIndexOutOfBoundsException("Буфер пуст");
+        // Если буфер пуст, бросить исключение
+        if (isEmpty()) throw new ArrayIndexOutOfBoundsException("Буфер пуст");
 
-        // Если в очереди один элемент, вернуть его и установить в first и last
-        // значения как при инициализации буфера
-        if (N == 1) {
-            itemToReturn = items[first];
-            items[first] = null;
-            first = -1;
-            last = -1;
-        } else {
-            // Иначе, если в очереди больше одного элемента,
-            // вернуть значение с индексом first, сделать его
-            // null массиве очереди, и сместить индекс first
-            // на одну позицию вправо
-            itemToReturn = items[first];
-            items[first] = null;
-            first = circIncrease(first);
-        }
+        // Удалить и вернуть первый элемент очереди буфера
+        itemToReturn = items[dequeueFrom];
 
-        N--;
+        items[dequeueFrom] = null;
+
+        dequeueFrom = circIncrease(dequeueFrom);
+
+        isFull = false;
 
         return itemToReturn;
     }
@@ -138,33 +131,13 @@ public class RingBuffer<Item> implements Iterable<Item> {
         System.out.println("------------");
     }
 
-    public Object[] returnBuffer() {
-
-        // Вернуть массив объектов очереди в порядке очереди
-
-        // Возвращаемый массив
-        @SuppressWarnings("unchecked")
-        Object[] arrayToReturn = new Object[N];
-
-        // Заполнение возвращаемого массива в порядке очереди
-        int i = 0;
-
-        for (Iterator<Item> iterator = iterator(); iterator.hasNext(); ) {
-            Item arg = iterator.next();
-            arrayToReturn[i] = arg;
-            i++;
-        }
-
-        return arrayToReturn;
-    }
-
     public Iterator<Item> iterator() throws UnsupportedOperationException {
         return new RingBufferIterator();
     }
 
     private class RingBufferIterator implements Iterator<Item> {
-        private int currentIndex = first;
-        private Item nextItem = currentIndex == -1 ? null : items[currentIndex];
+        private int currentIndex = dequeueFrom;
+        private Item nextItem = items[currentIndex];
         private Item currentItem;
 
         public boolean hasNext() {
@@ -175,7 +148,7 @@ public class RingBuffer<Item> implements Iterable<Item> {
 
             currentItem = nextItem;
 
-            if (currentIndex == last) {
+            if (currentIndex == circDearease(enqueueAt)) {
                 nextItem = null;
             } else {
                 currentIndex = circIncrease(currentIndex);
@@ -183,6 +156,10 @@ public class RingBuffer<Item> implements Iterable<Item> {
             }
 
             return currentItem;
+        }
+
+        private int circDearease(int arg) {
+            return arg - 1 == -1 ? items.length - 1 : arg;
         }
 
         public void remove() {
@@ -210,10 +187,6 @@ public class RingBuffer<Item> implements Iterable<Item> {
         }
 
         return true;
-    }
-
-    private int circIncrease(int arg) {
-        return (arg + 1) % items.length;
     }
 
     public static void main(String[] args) {
@@ -246,12 +219,6 @@ public class RingBuffer<Item> implements Iterable<Item> {
         System.out.println("Iterator output:");
         for(Iterator<Integer> iterator1 = a.iterator(); iterator1.hasNext();) {
             System.out.println(iterator1.next());
-        }
-
-        System.out.println("returnBuffer(): ");
-        Object[] b = a.returnBuffer();
-        for (int i = 0; i < b.length; i++) {
-            System.out.println(b[i]);
         }
     }
 }
