@@ -120,10 +120,10 @@ public class GeneralizedQueueAsArray<Item> implements Iterable<Item> {
     }
 
     public Iterator<Item> iterator() {
-        return new ListIterator();
+        return new QueueIterator();
     }
 
-    private class ListIterator implements Iterator<Item> {
+    private class QueueIterator implements Iterator<Item> {
         private int currentIndex = 0;
         private Item current = a[currentIndex];
         private Item realCurrent = current;
