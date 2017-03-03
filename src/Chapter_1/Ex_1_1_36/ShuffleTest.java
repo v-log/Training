@@ -1,4 +1,4 @@
-package Ex_1_1_36;
+package Chapter_1.Ex_1_1_36;
 
 import edu.princeton.cs.algs4.StdRandom;
 import java.io.IOException;

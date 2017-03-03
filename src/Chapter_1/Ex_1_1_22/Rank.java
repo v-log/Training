@@ -1,4 +1,4 @@
-package Ex_1_1_22;
+package Chapter_1.Ex_1_1_22;
 
 /**
  * Created by vl on 25.06.16.

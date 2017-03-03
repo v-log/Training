@@ -1,4 +1,4 @@
-package Ex_1_2_3;
+package Chapter_1.Ex_1_2_3;
 
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;

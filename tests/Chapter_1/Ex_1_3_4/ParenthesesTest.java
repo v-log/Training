@@ -1,8 +1,8 @@
-package Ex_1_3_4;
+package Chapter_1.Ex_1_3_4;
 
 import org.junit.Test;
 
-import static Ex_1_3_4.Parentheses.parenthesesBalanced;
+import static Chapter_1.Ex_1_3_4.Parentheses.parenthesesBalanced;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

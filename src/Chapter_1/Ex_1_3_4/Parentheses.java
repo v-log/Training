@@ -1,4 +1,4 @@
-package Ex_1_3_4;
+package Chapter_1.Ex_1_3_4;
 
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdIn;
