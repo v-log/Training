@@ -1,7 +1,7 @@
-package Ex_1_2_13_1_2_19;
+package Chapter_1.Ex_1_2_13_1_2_19;
 
-import Ex_1_2_12.DateNotLegalException;
-import Ex_1_2_12.SmartDate;
+import Chapter_1.Ex_1_2_12.DateNotLegalException;
+import Chapter_1.Ex_1_2_12.SmartDate;
 
 /**
  * Created by vl on 07.09.16.
