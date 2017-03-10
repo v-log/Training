@@ -1,4 +1,4 @@
-package Ex_1_3_24__1_3_26;
+package Chapter_1.Ex_1_3_24__1_3_26;
 
 import java.util.Iterator;
 
@@ -124,7 +124,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
     public void insertAfter(Item itemToInsertAfter, Item itemToInsert) {
 
-        // Insert Node from this Linked-List Stack after Node with
+        // Insert Node from this Linked-List StackArray after Node with
         // item <itemToInsertAfter>
         // Node, после которого вставляется элемент
         Node nodeToInsertAfter = searchNode(itemToInsertAfter);
@@ -150,7 +150,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
 
     public void remove(LinkedListStack<Item> list, String key) throws IllegalArgumentException {
 
-        // Remove from Linked-List Stack <list> a Node with string item "key"
+        // Remove from Linked-List StackArray <list> a Node with string item "key"
         // Флаг наличия удаления из списка
         boolean deleted = false;
         Iterator<Item> iter = list.iterator();

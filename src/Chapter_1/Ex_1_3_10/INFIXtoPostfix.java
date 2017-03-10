@@ -1,4 +1,4 @@
-package Ex_1_3_10;
+package Chapter_1.Ex_1_3_10;
 
 import edu.princeton.cs.algs4.ResizingArrayStack;
 

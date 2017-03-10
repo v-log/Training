@@ -34,9 +34,12 @@ public class TrieTest {
 
         // Тест 2
         // Если дерево непустое, каждый узел, у которого нет
-        // потомка, должен быть листом (кроме корневого).
+        // потомка - лист (кроме корневого),
+        // и количество листов равно размеру дерева.
+
         if (!trieToTest.isEmpty()) {
-            return leafCheck(trieToTest.getRoot().children);
+            return leafCheck(trieToTest.getRoot().children) &&
+                    leafCount(trieToTest.getRoot().children, 0) == trieToTest.size();
         } else {
 
             // Если дерево пустое, начальных условий для теста нет,
@@ -64,6 +67,26 @@ public class TrieTest {
         }
 
         return true;
+    }
+
+    private Integer leafCount(Map<Character, Trie.TrieNode> children, Integer counter) {
+
+        Iterator<Map.Entry<Character, Trie.TrieNode>> iterator = children.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+
+            Trie.TrieNode currentNode = iterator.next().getValue();
+
+            if (currentNode.isLeaf) {
+                counter++;
+            }
+
+            if (!currentNode.children.isEmpty()) {
+                counter = leafCount(currentNode.children, counter);
+            }
+        }
+
+        return counter;
     }
 
     @Test

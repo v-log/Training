@@ -1,6 +1,4 @@
-package Ex_1_3_24__1_3_26;
-
-import java.lang.reflect.Array;
+package Chapter_1.Ex_1_3_24__1_3_26;
 
 /**
  * Created by vl on 22.10.16.

@@ -10,10 +10,13 @@ import java.util.*;
 Реализовать алгоритмы хеширования и префиксного дерева для
 определения уникальных строк в массиве строк;
 */
-public class Trie {
+public class Trie{
 
     // Корень дерева
     private TrieNode root = new TrieNode();
+
+    // Количество элементов дерева
+    private int N = 0;
 
     // Внутренный класс узла дерева
     public static class TrieNode {
@@ -35,8 +38,12 @@ public class Trie {
         return node.children;
     }
 
+    public int size() {
+        return N;
+    }
+
     public boolean isEmpty() {
-        return root.children.isEmpty();
+        return N == 0;
     }
 
     public void insert(String stringToInsert) throws IllegalArgumentException {
@@ -44,9 +51,7 @@ public class Trie {
         // Вставка строки в дерево
 
         // Если введенная строка содержит небуквенные символы, бросить исключение
-        if (!stringToInsert.matches("[\\p{Lu}\\p{Ll}]+")) {
-            throw new IllegalArgumentException("Input should contain only letters");
-        }
+        checkInput(stringToInsert);
 
         // Начальное значение для текущего узла
         TrieNode currentNode = root;
@@ -66,6 +71,8 @@ public class Trie {
 
         // Обозначить узел с последним символом как лист
         currentNode.isLeaf = true;
+
+        N++;
     }
 
     public boolean search(String stringToSearch) throws IllegalArgumentException {
@@ -73,9 +80,7 @@ public class Trie {
         // Поиск строки в дереве
 
         // Если искомая строка содержит небуквенные символы, бросить исключение
-        if (!stringToSearch.matches("[\\p{Lu}\\p{Ll}]+")) {
-            throw new IllegalArgumentException("Input should contain only letters");
-        }
+        checkInput(stringToSearch);
 
         // Начальное значение для текущего узла
         TrieNode currentNode = root;
@@ -105,20 +110,20 @@ public class Trie {
         // Удаление строки из дерева
 
         // Если удаляемая строка содержит небуквенные символы, бросить исключение
-        if (!stringToRemove.matches("[\\p{Lu}\\p{Ll}]+")) {
-            throw new IllegalArgumentException("Input should contain only letters");
-        }
+        checkInput(stringToRemove);
 
         removeStringWithStack(getNodesRoute(stringToRemove), stringToRemove);
+
+        N--;
     }
 
-    private StackArray<TrieNode> getNodesRoute(String stringForRoute)
+    private Stack<TrieNode> getNodesRoute(String stringForRoute)
             throws IllegalArgumentException {
 
         // Получение стека узлов дерева по строке
 
         // Стек узлов для возврата
-        StackArray<TrieNode> nodesRoute = new StackArray<>();
+        Stack<TrieNode> nodesRoute = new Stack<>();
 
         char[] stringAsCharArray = stringForRoute.toLowerCase().toCharArray();
 
@@ -149,7 +154,7 @@ public class Trie {
         return nodesRoute;
     }
 
-    private void removeStringWithStack(StackArray<TrieNode> stack, String stringToRemove)
+    private void removeStringWithStack(Stack<TrieNode> stack, String stringToRemove)
             throws IllegalArgumentException {
 
         // Удаление строки из дерева при помощи стека
@@ -182,11 +187,23 @@ public class Trie {
                         stack.peek().children.remove(stringToRemove.toLowerCase().charAt(stack.size()));
                     }
                 }
+
+                if (!stack.isEmpty() && stack.peek().isLeaf) {
+                    break;
+                }
             }
         } else {
 
             // Иначе строка не содержится в дереве - бросить исключение
-            throw new IllegalArgumentException("Trie has no such string");
+            throw new IllegalArgumentException("Trie has no such string: " + stringToRemove);
+        }
+    }
+
+    private static void checkInput(String stringToCheck) throws IllegalArgumentException {
+
+        // Проверка строки на отсутствие небуквенных символов
+        if (!stringToCheck.matches("[\\p{Lu}\\p{Ll}]+")) {
+            throw new IllegalArgumentException("Input should contain only letters");
         }
     }
 
@@ -232,7 +249,12 @@ public class Trie {
 
         Trie trie = new Trie();
 
-        String[] input = {"abcde", "zp", "abkpo", "k", "hd", "abr", };
+//        String[] input = {"abcde", "zp", "abkpo", "kp", "hd", "ab", };
+        String[] input = {"az", "bx", "em", };
+//        String[] input = {"a", "ab", "abc", "abcd", "abcde", };
+//        String[] input = {"a", "b", "c", "d", "e", };
+//        String[] input = {"a", "b", "c", "d", "e", };
+//        String[] input = {"a", "b", };
         for (String str : input) {
             trie.insert(str);
         }
@@ -240,18 +262,23 @@ public class Trie {
         trie.printTrie();
 
         for (String str : input) {
+            System.out.println("removing " + str);
             trie.remove(str);
         }
-
-        trie.insert("mno");
-        trie.insert("jfk");
 
         System.out.println();
         System.out.println("After removing all:");
 
-        trie.printTrie();
+
 
         System.out.println("------------");
+
+        trie.insert("zpd");
+        trie.insert("jfk");
+
+        trie.printTrie();
+
+        System.out.println();
 
         System.out.println(trie.search("mno"));
     }

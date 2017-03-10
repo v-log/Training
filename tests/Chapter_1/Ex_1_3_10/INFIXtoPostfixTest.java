@@ -1,8 +1,8 @@
-package Ex_1_3_10;
+package Chapter_1.Ex_1_3_10;
 
 import org.junit.Test;
 
-import static Ex_1_3_10.INFIXtoPostfix.*;
+import static Chapter_1.Ex_1_3_10.INFIXtoPostfix.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

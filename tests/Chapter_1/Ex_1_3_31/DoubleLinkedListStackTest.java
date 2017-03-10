@@ -1,8 +1,7 @@
-package Ex_1_3_31;
+package Chapter_1.Ex_1_3_31;
 
 import org.junit.Test;
 
-import java.awt.event.ItemEvent;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
