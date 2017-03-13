@@ -113,6 +113,22 @@ public class TrieTest {
         assertTrue(invariantTest(trie1));
 
 
+        // Тест на добавление нескольких элементов в пустое дерево
+        String[] input4 = {"a", "ab", "abc", "abcd", "abcde", };
+
+        TrieAsArrayForTests originalTrie4 = new TrieAsArrayForTests(1, input4);
+
+        assertTrue(invariantTest(originalTrie4.getTrie(0)));
+
+
+        // Тест на добавление нескольких элементов в пустое дерево
+        String[] input5 = {"abcde", "abcd", "abc", "ab", "a", };
+
+        TrieAsArrayForTests originalTrie5 = new TrieAsArrayForTests(1, input5);
+
+        assertTrue(invariantTest(originalTrie5.getTrie(0)));
+
+
         // Тест на перехват исключения при добавлении строки
         // с небуквенными символами (нижнее подчеркивание)
         Trie trie2 = new Trie();
@@ -200,6 +216,34 @@ public class TrieTest {
         }
 
         assertTrue(trie1.isEmpty() && invariantTest(trie1));
+
+
+        // Тест на удаление всех элементов
+        String[] input5 = {"a", "ab", "abc", "abcd", "abcde", };
+
+        TrieAsArrayForTests originalTrie5 = new TrieAsArrayForTests(1, input5);
+
+        Trie trie5 = originalTrie5.getTrie(0);
+
+        for (String arg : input5) {
+            trie5.remove(arg);
+        }
+
+        assertTrue(invariantTest(originalTrie5.getTrie(0)));
+
+
+        // Тест на удаление всех элементов
+        String[] input6 = {"abcde", "abcd", "abc", "ab", "a", };
+
+        TrieAsArrayForTests originalTrie6 = new TrieAsArrayForTests(1, input6);
+
+        Trie trie6 = originalTrie6.getTrie(0);
+
+        for (String arg : input6) {
+            trie6.remove(arg);
+        }
+
+        assertTrue(invariantTest(originalTrie6.getTrie(0)));
 
 
         // Тест на перехват исключения при удалении

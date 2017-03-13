@@ -10,7 +10,7 @@ import java.util.*;
 Реализовать алгоритмы хеширования и префиксного дерева для
 определения уникальных строк в массиве строк;
 */
-public class Trie{
+public class Trie implements Iterable<String> {
 
     // Корень дерева
     private TrieNode root = new TrieNode();
@@ -50,7 +50,6 @@ public class Trie{
 
         // Вставка строки в дерево
 
-        // Если введенная строка содержит небуквенные символы, бросить исключение
         checkInput(stringToInsert);
 
         // Начальное значение для текущего узла
@@ -79,7 +78,6 @@ public class Trie{
 
         // Поиск строки в дереве
 
-        // Если искомая строка содержит небуквенные символы, бросить исключение
         checkInput(stringToSearch);
 
         // Начальное значение для текущего узла
@@ -109,7 +107,6 @@ public class Trie{
 
         // Удаление строки из дерева
 
-        // Если удаляемая строка содержит небуквенные символы, бросить исключение
         checkInput(stringToRemove);
 
         removeStringWithStack(getNodesRoute(stringToRemove), stringToRemove);
@@ -147,7 +144,7 @@ public class Trie{
             } else {
 
                 // Иначе строка не содержится в дереве - бросить исключение
-                throw new IllegalArgumentException("Trie has no such string");
+                throw new IllegalArgumentException("Trie has no such string1: " + stringForRoute);
             }
         }
 
@@ -160,12 +157,16 @@ public class Trie{
         // Удаление строки из дерева при помощи стека
         // для обратного прохода
 
-        // Если последний узел стека - лист,
+        // Если последний узел стека - лист
+        // (значит слово присутствует в дереве,
+        // и можно его удалять),
         // удалить те узлы из этой строки,
         // начиная с конца, у которых нет других потомков
         if (stack.peek().isLeaf) {
 
             int initialStackSize = stack.size();
+
+            stack.peek().isLeaf = false;
 
             for (int i = 0; i < initialStackSize; i++) {
 
@@ -174,7 +175,7 @@ public class Trie{
 
                 // Если у текущего узла при обратном проходе
                 // нет потомков
-                if (currentNode.children.isEmpty()) {
+                if (currentNode.children.isEmpty() && !currentNode.isLeaf) {
 
                     // Если текущий узел - узел с первым символом
                     // удаляемой строки, удалить текущий узел из
@@ -186,9 +187,7 @@ public class Trie{
                         // Иначе удалить его из потомков его узла-предка
                         stack.peek().children.remove(stringToRemove.toLowerCase().charAt(stack.size()));
                     }
-                }
-
-                if (!stack.isEmpty() && stack.peek().isLeaf) {
+                } else {
                     break;
                 }
             }
@@ -202,6 +201,7 @@ public class Trie{
     private static void checkInput(String stringToCheck) throws IllegalArgumentException {
 
         // Проверка строки на отсутствие небуквенных символов
+
         if (!stringToCheck.matches("[\\p{Lu}\\p{Ll}]+")) {
             throw new IllegalArgumentException("Input should contain only letters");
         }
@@ -209,39 +209,106 @@ public class Trie{
 
     public void printTrie() {
 
-        // Печать всех строк в дереве
+        // Вывод на экран всех строк в дереве
 
-        // Строка для вывода строк в дереве
-        StringBuilder stringToPrint = new StringBuilder();
-
-        printTrieInner(root, stringToPrint);
+        for (String arg : this) {
+            System.out.println(arg);
+        }
     }
 
-    private void printTrieInner(TrieNode root, StringBuilder stringToPrint) {
+    public Iterator<String> iterator() {
+        return new Trie.TrieIterator();
+    }
 
-        // Внутренний метод для вывода на экран всех строк в дереве
+    private class TrieIterator implements Iterator<String> {
 
-        // Проход по узлам-потомкам
-        for (Map.Entry<Character, TrieNode> entry : root.children.entrySet()) {
+        Stack<Iterator<Map.Entry<Character, TrieNode>>> stackOfIterators = new Stack<>();
 
-            // Добавление текущего символа к строке для вывода
-            stringToPrint.append(entry.getKey());
+        Iterator<Map.Entry<Character, TrieNode>> currentIterator =
+                stackOfIterators.push(root.children.entrySet().iterator());
 
-            // Если узел - лист
-            if (entry.getValue().isLeaf) {
+        StringBuilder stringToReturn = new StringBuilder();
 
-                // Вывод на экран строки для вывода
-                System.out.println(stringToPrint.toString());
+        boolean flagForReturn;
+
+        boolean pushed;
+
+        int fullIteratorCount = 0;
+
+        public boolean hasNext() {
+            return !stackOfIterators.isEmpty();
+        }
+
+        public String next() {
+
+            // Проход по дереву осуществляется при помощи
+            // стека итераторов, начиная от корня
+
+            flagForReturn = false;
+            pushed = false;
+            String temp = null;
+
+            currentIterator = stackOfIterators.peek();
+
+            // Осуществляется проход по текущему итератору:
+            // если текущий узел - лист, возвращает лист
+            // (индикатор - flagForReturn);
+
+            // если у текущего узла есть потомки, итератор
+            // потомков этого узла заносится в стек
+            // (индикатор - pushed),
+            // и проход продолжается по этому добавленному итератору;
+
+            // когда текущий итератор пройден, из стека достается
+            // итератор и по нему продолжается проход, по тем же правилам.
+
+            if (currentIterator.hasNext()) {
+
+                Map.Entry<Character, TrieNode> currentEntry = currentIterator.next();
+
+                Set<Map.Entry<Character, TrieNode>> currentChildren = currentEntry.getValue().children.entrySet();
+
+                stringToReturn.append(currentEntry.getKey());
+
+                if (!currentIterator.hasNext()) {
+                    fullIteratorCount++;
+                }
+
+                if (!currentChildren.isEmpty()) {
+                    stackOfIterators.push(currentChildren.iterator());
+                    pushed = true;
+                }
+
+                if (currentEntry.getValue().isLeaf) {
+                    temp = stringToReturn.toString();
+                    flagForReturn = true;
+                }
+            } else {
+                if (!stackOfIterators.isEmpty()) {
+                    stackOfIterators.pop();
+                    fullIteratorCount--;
+                }
             }
 
-            // Если у текущего узла есть потомки
-            if (!entry.getValue().children.isEmpty()) {
-
-                // Повторить процедуру с потомками
-                printTrieInner(entry.getValue(), stringToPrint);
+            // Проверка на количество завершившихся итераторов в стеке -
+            // для определения последнего шага итератора всего дерева
+            if (fullIteratorCount == stackOfIterators.size()) {
+                stackOfIterators.clear();
             }
 
-            stringToPrint.deleteCharAt(stringToPrint.length() - 1);
+            // При переходе к следующему потомку узла из строки для
+            // возврата (после сохранения ее в temp) удаляется
+            // последний символ, кроме случаев когда в стек был
+            // добавлен новый итератор (перешли на уровень ниже)
+            if (!pushed && stringToReturn.length() > 0) {
+                stringToReturn.deleteCharAt(stringToReturn.length() - 1);
+            }
+
+            if (flagForReturn) {
+                return temp;
+            } else {
+                return next();
+            }
         }
     }
 
@@ -249,13 +316,14 @@ public class Trie{
 
         Trie trie = new Trie();
 
-//        String[] input = {"abcde", "zp", "abkpo", "kp", "hd", "ab", };
-        String[] input = {"az", "bx", "em", };
-//        String[] input = {"a", "ab", "abc", "abcd", "abcde", };
+//        String[] input = {"zbjcde", "zbj", "zbjkpo", "kp", "hd", "ab", };
+//        String[] input = {"az", "bx", "em", };
+        String[] input = {"a", "ab", "abc", "abcd", "abcde", };
+//        String[] input = {"abcde", "abcd", "abc", "ab", "a", };
 //        String[] input = {"a", "b", "c", "d", "e", };
-//        String[] input = {"a", "b", "c", "d", "e", };
-//        String[] input = {"a", "b", };
+
         for (String str : input) {
+            System.out.println("inserting " + str);
             trie.insert(str);
         }
 
@@ -268,9 +336,6 @@ public class Trie{
 
         System.out.println();
         System.out.println("After removing all:");
-
-
-
         System.out.println("------------");
 
         trie.insert("zpd");
