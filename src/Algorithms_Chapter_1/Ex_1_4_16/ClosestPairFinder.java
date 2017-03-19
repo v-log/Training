@@ -3,7 +3,6 @@ package Algorithms_Chapter_1.Ex_1_4_16;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Created by vl on 20.03.17.
