@@ -32,7 +32,6 @@ public class ArrayCoincidenceCount {
         System.out.println('\n' + "Steps = " + steps);
     }
 
-
     public static void main(String[] args) {
 
         int[] a = new int[100];
