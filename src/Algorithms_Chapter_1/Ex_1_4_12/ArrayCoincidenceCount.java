@@ -32,6 +32,25 @@ public class ArrayCoincidenceCount {
         System.out.println('\n' + "Steps = " + steps);
     }
 
+    public static void coincidenceCount2(int[] a, int[] b) {
+        int i = 0, j = 0, steps = 0;
+
+        while (i < a.length && j < b.length) {
+            if (a[i] < b[j]) {
+                i++;
+            } else if (a[i] == b[j]) {
+                System.out.printf(a[i] + " ");
+                i++;
+                j++;
+            } else {
+                j++;
+            }
+            steps++;
+        }
+
+        System.out.println('\n' + "Steps = " + steps);
+    }
+
     public static void main(String[] args) {
 
         int[] a = new int[100];
@@ -46,5 +65,6 @@ public class ArrayCoincidenceCount {
         }
 
         coincidenceCount(a, b);
+        coincidenceCount2(a, b);
     }
 }
