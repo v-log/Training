@@ -15,10 +15,14 @@ public class ClosestPairFinder {
 
         double difference = Double.MAX_VALUE;
 
+        if (a.length == 0) {
+            throw new ArrayIndexOutOfBoundsException("Empty array given");
+        }
+
         int index = 0;
 
         for (int i = 0; i < a.length - 1; i++) {
-            double temp = Math.abs(a[i + 1] - a[i]);
+            double temp = a[i + 1] - a[i];
             if (temp < difference) {
                 difference = temp;
                 index = i;
@@ -33,7 +37,7 @@ public class ClosestPairFinder {
 
     public static void main(String[] args) {
 
-        double[] a = new double[100];
+        double[] a = new double[0];
 
         int MAX = 1000000;
 
