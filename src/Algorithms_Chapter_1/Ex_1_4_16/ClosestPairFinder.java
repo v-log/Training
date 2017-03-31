@@ -37,7 +37,7 @@ public class ClosestPairFinder {
 
     public static void main(String[] args) {
 
-        double[] a = new double[0];
+        double[] a = new double[100];
 
         int MAX = 1000000;
 
