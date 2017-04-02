@@ -17,7 +17,7 @@ public class BitonicSearchTest {
         int[] bitonicArray2 = {1, 2, 0, -1 };
 
 
-        // Тест на нахождение элементов массива
+        // Тест на наличие элементов в массиве
         boolean flag0 = true;
 
         for (int el : bitonicArray0) {
@@ -43,5 +43,11 @@ public class BitonicSearchTest {
         }
 
         assertTrue(flag2);
+
+
+        // Тест на отсутствие элементов в массиве
+        assertFalse(BitonicSearch.bitonicSearch(bitonicArray0, -1));
+
+        assertFalse(BitonicSearch.bitonicSearch(bitonicArray0, 13));
     }
 }

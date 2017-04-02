@@ -7,20 +7,10 @@ public class BitonicSearch {
     public static boolean bitonicSearch(int[] bitonicArray, int key) {
 
         int maxIndex = bitonicMax(bitonicArray);
-
-        if (key == bitonicArray[maxIndex]) {
-            return true;
-        }
-
-        if (rankDirect(bitonicArray, maxIndex, key)) {
-            return true;
-        }
-
-        if (rankIndirect(bitonicArray, maxIndex, key)) {
-            return true;
-        }
-
-        return false;
+        
+        return (key == bitonicArray[maxIndex])
+                || rankDirect(bitonicArray, maxIndex, key)
+                || rankIndirect(bitonicArray, maxIndex, key);
     }
 
     private static int bitonicMax(int[] bitonicArray) {
