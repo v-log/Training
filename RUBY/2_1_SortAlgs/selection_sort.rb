@@ -1,37 +1,23 @@
 def sorted?(a)
-  for i in 0...a.length - 1
-    if a[i] > a[i + 1]
-      return false
-    end
-  end
-
-  true
+  (0...a.size - 1).all? { |i| a[i] <= a[i+1] }
 end
 
 def selection_sort(a)
-  @N = a.length
-  for i in 0...@N
-    min = i
-    for j in i + 1...@N
-      if a[j] < a[min]
-        min = j
-      end
-    end
-
+  n = a.size
+  (0...n).each do |i|
+    min = (i...n).min { |p, q| a[p] <=> a[q] }
     a[i], a[min] = a[min], a[i]
   end
 end
 
 def selection_sort2(a)
-  @N = a.length
-  for i in 0...@N
-    min = i
-    for j in i + 1...@N
-      var1 = block_given? ? yield(a[j]) : a[j]
-      var2 = block_given? ? yield(a[min]) : a[min]
-      if var1 < var2
-        min = j
-      end
+  n = a.size
+  (0...n).each do |i|
+    min = (i...n).min do |p, q|
+      get_var = lambda {|item| block_given? ? yield(item) : item}
+      var1 = get_var.call(a[p])
+      var2 = get_var.call(a[q])
+      var1 <=> var2
     end
 
     a[i], a[min] = a[min], a[i]
