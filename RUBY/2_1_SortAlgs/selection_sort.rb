@@ -12,12 +12,10 @@ end
 
 def selection_sort2(a)
   n = a.size
+  get_var = block_given? ? lambda { |item| yield(item) } : lambda { |item| item }
   (0...n).each do |i|
     min = (i...n).min do |p, q|
-      get_var = lambda {|item| block_given? ? yield(item) : item}
-      var1 = get_var.call(a[p])
-      var2 = get_var.call(a[q])
-      var1 <=> var2
+      get_var[a[p]] <=> get_var[a[q]]
     end
 
     a[i], a[min] = a[min], a[i]
@@ -26,7 +24,7 @@ end
 
 a = [5,3,2,1,4]
 puts sorted?(a)
-selection_sort(a)
+selection_sort2(a)
 raise unless sorted?(a)
 puts a.inspect
 puts sorted?(a)
