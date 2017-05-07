@@ -36,3 +36,11 @@ puts a.inspect
 b = [['Vasya', 1], ['Petya', 3], ['Kolya', 2]]
 insertion_sort2(b) { |item| -item[1] }
 puts b.inspect # [["Petya", 3], ["Kolya", 2], ["Vasya", 1]]
+
+rand_hash_1 = {}
+100.times { |n| rand_hash_1[n] = rand(0..99) }
+rand_hash_2 = rand_hash_1.clone
+insertion_sort2(rand_hash_1) { |item| -item[1] }
+# puts rand_hash_1.inspect
+puts
+# puts rand_hash_2.inspect
