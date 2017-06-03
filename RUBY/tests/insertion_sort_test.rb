@@ -24,12 +24,12 @@ class InsertionSortTest < Minitest::Test
   end
 
   def test_insertion_sort_with_random_aryay
-    rand_ary_1 = Array.new(100) { rand(0...99) }
-    rand_ary_2 = rand_ary_1[0..rand_ary_1.size]
+    rand_ary_1 = (0...100).to_a.shuffle
+    rand_ary_2 = rand_ary_1.dup
     assert_equal rand_ary_1.sort, insertion_sort!(rand_ary_2)
   end
 
-  # Testing #insertion_sort2!!
+  # Testing #insertion_sort2!
   def test_insertion_sort2_without_block
     assert_equal @sorted_ary, insertion_sort2!(@unsorted_ary)
   end
