@@ -20,38 +20,38 @@ class SelectionSortTest < Minitest::Test
 
   # Testing #selection_sort
   def test_selection_sort
-    assert_equal @sorted_arr, selection_sort(@unsorted_arr)
+    assert_equal @sorted_arr, selection_sort!(@unsorted_arr)
   end
 
   def test_selection_sort_with_random_array
     rand_arr_1 = Array.new(100) { rand(0...99) }
     rand_arr_2 = rand_arr_1[0..rand_arr_1.size]
-    assert_equal rand_arr_1.sort, selection_sort(rand_arr_2)
+    assert_equal rand_arr_1.sort, selection_sort!(rand_arr_2)
   end
 
   # Testing #selection_sort2
   def test_selection_sort2_without_block
-    assert_equal @sorted_arr, selection_sort2(@unsorted_arr)
+    assert_equal @sorted_arr, selection_sort2!(@unsorted_arr)
   end
 
   def test_selection_sort2_without_block_with_rand_arr
-    rand_arr_1 = Array.new(100) { rand(0..99) }
-    rand_arr_2 = rand_arr_1[0..rand_arr_1.size]
-    assert_equal rand_arr_1.sort, selection_sort2(rand_arr_2)
+    rand_arr_1 = (0...100).to_a.shuffle
+    rand_arr_2 = rand_arr_1.dup
+    assert_equal rand_arr_1.sort, selection_sort2!(rand_arr_2)
   end
 
   def test_selection_sort2_with_block
-    selection_sort2(@unsorted_hash) { |item| -item[1] }
+    selection_sort2!(@unsorted_hash) { |item| -item[1] }
     assert_equal @sorted_hash, @unsorted_hash
   end
 
   def test_selection_sort2_with_block_with_rand_arr
-    rand_hash_1 = {}
-    shuffled_indices = (0..99).to_a.shuffle
-    100.times { |n| rand_hash_1[n] = shuffled_indices.pop }
-    rand_hash_2 = rand_hash_1.clone.to_a
-
-    selection_sort2(rand_hash_2) { |item| -item[1] }
-    assert_equal(rand_hash_1.sort_by { |key, value| -value }, rand_hash_2)
+    permutation = (0...100).to_a.shuffle
+    pairs = []
+    (0...permutation.size).each { |i| pairs.push [i, permutation[i]] }
+    pairs_copy = pairs.dup
+    pairs.sort_by! { |item| -item[1] }
+    selection_sort2!(pairs_copy) { |item| -item[1] }
+    assert_equal(pairs, pairs_copy)
   end
 end
