@@ -26,32 +26,32 @@ class ShellSortTest < Minitest::Test
   def test_shell_sort_with_random_ary
     rand_ary_1 = (0...100).to_a.shuffle
     rand_ary_2 = rand_ary_1.dup
-    assert_equal rand_ary_1.sort, shell_sort2!(rand_ary_2), "Array hasn't been sorted properly"
+    assert_equal rand_ary_1.sort, shell_sort_2!(rand_ary_2), "Array hasn't been sorted properly"
   end
 
-  # Testing #shell_sort2!
-  def test_shell_sort2_without_block
-    assert_equal @sorted_ary, shell_sort2!(@unsorted_ary), "Array hasn't been sorted"
+  # Testing #shell_sort_2!
+  def test_shell_sort_2_without_block
+    assert_equal @sorted_ary, shell_sort_2!(@unsorted_ary), "Array hasn't been sorted"
   end
 
-  def test_shell_sort2_without_block_with_rand_ary
+  def test_shell_sort_2_without_block_with_rand_ary
     rand_ary_1 = (0...100).to_a.shuffle
     rand_ary_2 = rand_ary_1.dup
-    assert_equal rand_ary_1.sort, shell_sort2!(rand_ary_2), "Array hasn't been sorted properly"
+    assert_equal rand_ary_1.sort, shell_sort_2!(rand_ary_2), "Array hasn't been sorted properly"
   end
 
-  def test_shell_sort2_with_block
-    shell_sort2!(@unsorted_hash) { |item| -item[1] }
+  def test_shell_sort_2_with_block
+    shell_sort_2!(@unsorted_hash) { |item| -item[1] }
     assert_equal @sorted_hash, @unsorted_hash, "Array hasn't been sorted"
   end
 
-  def test_shell_sort2_with_block_with_rand_ary
+  def test_shell_sort_2_with_block_with_rand_ary
     permutation = (0...100).to_a.shuffle
     pairs = []
     (0...permutation.size).each { |i| pairs.push [i, permutation[i]] }
     pairs_copy = pairs.dup
     pairs.sort_by! { |item| -item[1] }
-    shell_sort2!(pairs_copy) { |item| -item[1] }
+    shell_sort_2!(pairs_copy) { |item| -item[1] }
     assert_equal pairs, pairs_copy, "Array hasn't been sorted properly"
   end
 end
