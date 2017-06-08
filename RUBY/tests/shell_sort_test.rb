@@ -47,8 +47,7 @@ class ShellSortTest < Minitest::Test
 
   def test_shell_sort_2_with_block_with_rand_ary
     permutation = (0...100).to_a.shuffle
-    pairs = []
-    (0...permutation.size).each { |i| pairs.push [i, permutation[i]] }
+    pairs = (0...permutation.size).map { |i| [i, permutation[i]] }
     pairs_copy = pairs.dup
     pairs.sort_by! { |item| -item[1] }
     shell_sort_2!(pairs_copy) { |item| -item[1] }
