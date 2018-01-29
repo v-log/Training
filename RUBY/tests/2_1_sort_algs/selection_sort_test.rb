@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../lib/2_1_SortAlgs/selection_sort'
+require_relative '../../lib/2_1_SortAlgs/selection_sort'
 
 class SelectionSortTest < Minitest::Test
   def setup
