@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative '../../lib/2_1_SortAlgs/shell_sort'
+require_relative '../../lib/2_1_sort_algs/shell_sort'
 
 class ShellSortTest < Minitest::Test
   def setup
