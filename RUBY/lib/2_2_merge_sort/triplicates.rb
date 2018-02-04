@@ -43,7 +43,7 @@ def triplicates(*lists)
   end
 
   nil
-end 
+end
 
 private
 
