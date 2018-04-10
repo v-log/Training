@@ -10,7 +10,6 @@ def triplicates(*lists)
   # sort input lists
   lists.each do |list|
     merge_sort!(list)
-    #list.sort
   end
   
   # find_triplicates
