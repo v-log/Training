@@ -1,3 +1,5 @@
+require_relative "../2_1_sort_algs/insertion_sort"
+
 def sorted?(a)
   (0...a.size - 1).all? { |i| a[i] <= a[i + 1] }
 end
@@ -5,6 +7,7 @@ end
 def merge_sort!(a, &block)
   return a if a.size <= 1
   aux = Array.new(a.size)
+
   if block_given?
     merge_sort_hlpr!(a, 0, a.size - 1, aux, &block)
   else
@@ -15,15 +18,31 @@ end
 
 private
 
+#improvement 1
+def choose_sort(a, lo,  hi, aux, &block)
+  if hi - lo <= 16
+    insertion_sort2!(a, &block)
+  else
+    merge_sort_hlpr!(a, lo, hi, aux, &block)
+  end
+end
+
 def merge_sort_hlpr!(a, lo, hi, aux, &block)
   if hi <= lo
     return a
   end
 
   mid = lo + (hi - lo)/2
-  merge_sort_hlpr!(a, lo, mid, aux, &block)
-  merge_sort_hlpr!(a, mid + 1, hi, aux, &block)
-  merge!(a, lo, mid, hi, aux, &block)
+  #merge_sort_hlpr!(a, lo, mid, aux, &block)
+  #merge_sort_hlpr!(a, mid + 1, hi, aux, &block)
+  choose_sort(a, lo, mid, aux, &block)
+  choose_sort(a, mid + 1, hi, aux, &block)
+
+  #improvement 2
+  if block.call(a[mid]) > block.call(a[mid + 1])
+    merge!(a, lo, mid, hi, aux, &block)
+  end
+
   a
 end
 
