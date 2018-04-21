@@ -18,22 +18,18 @@ end
 
 private
 
-def total_size(lists)
-  total_size = 0
-  lists.each do |list|
-    total_size += list.size
-  end
-  total_size
-end
-
 def find_triplicates(given_lists)
-  lists_total_size = total_size(given_lists)
+  lists_total_size = given_lists.map(&:size).sum
+  # indices of all lists to move through them
   indices = Array.new(given_lists.size, 0)
-  eql_elems = 0
+  # equal elements counter - inc when coincidence found
+  # (1  - for current element)
+  eql_elems = 1
   prev = ""
   
   lists_total_size.times do |curr|
-    # look through all lists finding min element
+    # take first elements of sorted lists
+    # and find min out of those
     curr_min_elems = Array.new
     given_lists.each_with_index do |list, list_number|
       if indices[list_number] < list.size
@@ -43,24 +39,24 @@ def find_triplicates(given_lists)
     
     curr = curr_min_elems.min
     
-    # inc index in a list with min elem
+    # in a list with min element found inc an index
     given_lists.each_with_index do |list, list_number|
       list_elem = list[indices[list_number]]
-      if list_elem.eql?(curr)
+      if list_elem == curr
         indices[list_number] += 1
         break
       end
     end
     
-    if curr.eql?(prev)
+    if curr == prev
       eql_elems += 1
     else
-      eql_elems = 0
+      eql_elems = 1
     end
 
     prev = curr
     
-    return curr if eql_elems == 2
+    return curr if eql_elems == 3
   end
 
   nil
