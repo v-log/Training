@@ -65,14 +65,20 @@ def merge_sort_hlpr!(a, lo, hi, aux, &block)
   #improvement 2
   if block.call(a[mid]) > block.call(a[mid + 1])
     merge!(a, lo, mid, hi, aux, &block)
-    swap(a, aux)
+    #swap(a, aux)
 
-    puts "after swap 3"
-    puts a.inspect
-    puts aux.inspect
-    puts
+    #puts "after swap 3"
+    #puts a.inspect
+    #puts aux.inspect
+    #puts
 
   end
+
+  swap(a, aux)
+  puts "after swap 3"
+  puts a.inspect
+  puts aux.inspect
+  puts
 
   a
 end
