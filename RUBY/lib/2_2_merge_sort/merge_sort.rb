@@ -63,7 +63,7 @@ def merge_sort_hlpr!(a, lo, hi, aux, &block)
   #choose_sort(a, mid + 1, hi, aux, &block)
 
   #improvement 2
-  if block.call(a[mid]) > block.call(a[mid + 1])
+#  if block.call(a[mid]) > block.call(a[mid + 1])
     merge!(a, lo, mid, hi, aux, &block)
     #swap(a, aux)
 
@@ -72,7 +72,7 @@ def merge_sort_hlpr!(a, lo, hi, aux, &block)
     #puts aux.inspect
     #puts
 
-  end
+#  end
 
   swap(a, aux)
   puts "after swap 3"
@@ -105,7 +105,7 @@ def merge! (a, lo, mid, hi, aux, &block)
       i += 1
     end
   end
-  a
+  
 end
 
 a = (0...8).to_a.shuffle
@@ -118,6 +118,6 @@ puts sorted?(a).to_s
 puts 
 b = [['Vasya', 1], ['Petya', 3], ['Kolya', 2]]
 puts b.inspect
-merge_sort!(b) { |item| -item[1] }
+#merge_sort!(b) { |item| -item[1] }
 puts "result:" + "\n" + b.inspect # [["Petya", 3], ["Kolya", 2], ["Vasya", 1]]
 
