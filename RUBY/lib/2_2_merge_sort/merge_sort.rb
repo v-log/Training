@@ -12,9 +12,9 @@ def merge_sort!(a, &block)
 
   level = levels(a)
   # Set the right initial position of arrays
-  a, aux = aux, a if level%2 == 0
+  a, aux = aux, a if level%2 != 0
   puts "level = #{level}"
-  level += 1
+#  level += 1
   if block_given?
     merge_sort_hlpr!(a, 0, a.size - 1, aux, level, &block)
   else
@@ -34,7 +34,7 @@ def levels(array)
 
   # Count source array depth to set the 
   # right initial position
-  levels = 0
+  levels = 1
   pow_of_2 = 1
   while array.size > pow_of_2 do
     pow_of_2 *= 2
