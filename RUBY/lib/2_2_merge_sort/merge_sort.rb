@@ -6,26 +6,49 @@ end
 
 def merge_sort!(a, &block)
   return a if a.size <= 1
+
+  # Auxiliary array for merge sort
   aux = Array.new(a.size)
 
+  level = levels(a)
+  # Set the right initial position of arrays
+  a, aux = aux, a if level%2 == 0
+  puts "level = #{level}"
+  level += 1
   if block_given?
-    merge_sort_hlpr!(a, 0, a.size - 1, aux, &block)
+    merge_sort_hlpr!(a, 0, a.size - 1, aux, level, &block)
   else
-    merge_sort_hlpr!(a, 0, a.size - 1, aux, &Proc.new {|x| x})
+    merge_sort_hlpr!(a, 0, a.size - 1, aux, level, &Proc.new {|x| x})
   end
-  #a, aux = aux, a
-  #a = aux
+
+  # Duplicate arrays in case we get to return
+  # the one unsorted after the last merge
   (0...a.length).each do |x|
     a[x] = aux[x]
   end
-  puts "After final swap"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
 end
 
 private
 
-#improvement 1
+def levels(array)
+
+  # Count source array depth to set the 
+  # right initial position
+  levels = 0
+  pow_of_2 = 1
+  while array.size > pow_of_2 do
+    pow_of_2 *= 2
+    levels += 1
+  end
+  levels
+
+  # If levels number is even, arrays' references
+  # need to be swaped
+#  puts "#{levels} levels"
+#  return true if levels % 2 == 0
+end
+
+# Improvement 1
 def choose_sort(a, lo,  hi, aux, &block)
   if hi - lo <= 16
     insertion_sort2!(a, &block)
@@ -34,43 +57,42 @@ def choose_sort(a, lo,  hi, aux, &block)
   end
 end
 
-#improvement 3
-def merge_sort_hlpr!(a, lo, hi, aux, &block)
+def merge_sort_hlpr!(a, lo, hi, aux,level, &block)
+  level -= 1
+
+  puts "level = #{level}"
   if hi <= lo
-    #return a
-    #a, aux = aux, a
+    aux[lo] = a[lo] if level != 0
+    level += 1
     return
   end
 
   mid = lo + (hi - lo)/2
-  
-  #puts "11111"  
-  #a, aux = aux, a  
   puts "lo = #{lo}, mid = #{mid}, hi = #{hi}"
   puts "a   = #{a.inspect}"
   puts "aux = #{aux.inspect}"
-  puts
+  puts  
+  
+  # Improvement 3 - change between arrays
+  # in order to avoid unnecessary data copy
+  merge_sort_hlpr!(aux, lo, mid, a, level, &block)
 
-  merge_sort_hlpr!(aux, lo, mid, a, &block)
-
-  #a, aux = aux, a
-  puts "after swap 1"
+  puts "After sorting left half"
   puts "a   = #{a.inspect}"
   puts "aux = #{aux.inspect}"
   puts
 
-  merge_sort_hlpr!(aux, mid + 1, hi, a, &block)
-
-  #a, aux = aux, a
-  puts "after swap 2"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
-  puts
-
+  merge_sort_hlpr!(aux, mid + 1, hi, a, level, &block)
   #choose_sort(a, lo, mid, aux, &block)
   #choose_sort(a, mid + 1, hi, aux, &block)
 
-  #improvement 2
+  puts "After sorting right half"
+  puts "a   = #{a.inspect}"
+  puts "aux = #{aux.inspect}"
+  puts
+
+  # Improvement 2 - check if subarrays are
+  # already in order
 #  if block.call(a[mid]) > block.call(a[mid + 1])
     merge!(a, lo, mid, hi, aux, &block)
     #a, aux = aux, a
@@ -83,12 +105,12 @@ def merge_sort_hlpr!(a, lo, hi, aux, &block)
 #  end
  
   #a, aux = aux, a
-  puts "after swap 3"
+  puts "After merge"
   puts "a   = #{a.inspect}"
   puts "aux = #{aux.inspect}"
   puts
 
- # a
+  level += 1
 end
 
 def merge!(a, lo, mid, hi, aux, &block)
@@ -97,8 +119,13 @@ def merge!(a, lo, mid, hi, aux, &block)
 #  (lo..hi).each do |x|
 #    aux[x] = a[x]
 #  end
+  if hi <= lo
+    return
+  end
 
   (lo..hi).each do |x|
+   # puts "a[i] = #{block.call(a[i])}"
+   # puts "a[j] = #{block.call(a[j])}"
     if i > mid
       aux[x] = a[j]
       j += 1
@@ -114,10 +141,10 @@ def merge!(a, lo, mid, hi, aux, &block)
     end
   end
   #a
-  a, aux = aux, a
+  #a, aux = aux, a
 end
 
-a = (0...16).to_a.shuffle
+a = (0...3).to_a.shuffle
 puts a.inspect
 puts sorted?(a)
 merge_sort!(a)
@@ -128,6 +155,6 @@ puts sorted?(a).to_s
 puts 
 b = [['Vasya', 1], ['Petya', 3], ['Kolya', 2]]
 puts b.inspect
-#merge_sort!(b) { |item| -item[1] }
+merge_sort!(b) { |item| -item[1] }
 puts "result:" + "\n" + b.inspect # [["Petya", 3], ["Kolya", 2], ["Vasya", 1]]
 
