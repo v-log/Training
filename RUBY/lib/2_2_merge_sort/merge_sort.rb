@@ -47,7 +47,7 @@ end
 def choose_sort(a, lo, hi, aux, level, cutoff, &block)
   if hi - lo <= cutoff
     puts "Before ins_sort a = #{a.inspect}"
-    insertion_sort2!(a, lo, hi, &block)
+    insertion_sort_2!(a, lo, hi, &block)
     puts "After ins_sort a  = #{a.inspect}"
   else
     merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
