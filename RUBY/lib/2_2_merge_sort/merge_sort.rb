@@ -4,7 +4,7 @@ def sorted?(a)
   (0...a.size - 1).all? { |i| a[i] <= a[i + 1] }
 end
 
-def merge_sort!(a, cutoff = 16, *impr_param, &block)
+def merge_sort!(a, cutoff = 16, &block)
   return a if a.size <= 1
 
   # Auxiliary array for merge sort
@@ -35,7 +35,7 @@ def levels(array)
   # Count source array depth to set the 
   # right initial position
 
-  #We have the first level whatever the case
+  #The first level is there whatever the case
   levels = 1
   pow_of_2 = 1
 
@@ -46,46 +46,27 @@ def levels(array)
   levels
 end
 
-# Improvement 1
-=begin
-def choose_sort(a, lo, hi, aux, level, cutoff, &block)
-  if hi - lo - 1 <= cutoff
-    puts "for ins_sort lo = #{lo}, hi = #{hi}"
-    puts "Before ins_sort a = #{a.inspect}"
-    insertion_sort_2!(a, lo, hi, &block)
-    level += 1
-    puts "After ins_sort a  = #{a.inspect}"
-  else
-    merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
-  end
-end
-=end
-
 def merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
   level -= 1
 
+  # Improvement 1
   # Choose insertion sort if optimal
 
   # Add 1 to count the zero index
   if hi - lo + 1 <= cutoff
-    puts "For ins_sort lo = #{lo}, hi = #{hi}"
-    puts "Before ins_sort! a = #{a.inspect}"
-    puts "aux        =         #{aux.inspect}"
-    puts "Level = #{level}"
-    puts "Level even = #{level.even?}"
+    # Set the right position of source and
+    # destination arrays depending on level parity
+    # (need this due to improvement 3)
     if level.even?
       insertion_sort_2!(aux, lo, hi, a, &block)
     else
       insertion_sort_2!(a, lo, hi, aux, &block)
     end
-    
-    puts "After ins_sort! a  = #{a.inspect}"
-    puts "aux        =         #{aux.inspect}"
+
     level += 1
     return
   end
 
-  puts "level = #{level}"
   # Return when reach bottom level (1 element)
   if hi <= lo
     # If array size is odd, one element, which is
@@ -100,63 +81,31 @@ def merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
   end
 
   mid = lo + (hi - lo)/2
-  puts "lo = #{lo}, mid = #{mid}, hi = #{hi}"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
-  puts
 
   # Improvement 3 - change between arrays
   # in order to avoid unnecessary data copy
   merge_sort_hlpr!(aux, lo, mid, a, level, cutoff, &block)
-  #choose_sort(aux, lo, mid, a, level, cutoff, &block)
-  puts "After sorting left half"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
-  puts
-
   merge_sort_hlpr!(aux, mid + 1, hi, a, level, cutoff, &block)
-  #choose_sort(aux, mid + 1, hi, a, level, cutoff, &block)
 
-  puts "After sorting right half"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
-  puts
-
-  # Improvement 2 - check if subarrays are
-  # already in order
-#  if block.call(a[mid]) > block.call(a[mid + 1])
+  # Improvement 2
+  # Check if subarrays are already in order
+  if block.call(a[mid]) > block.call(a[mid + 1])
     merge!(a, lo, mid, hi, aux, &block)
-    #a, aux = aux, a
-
-    #puts "after swap 3"
-    #puts a.inspect
-    #puts aux.inspect
-    #puts
-
-#  end
- 
-  #a, aux = aux, a
-  puts "After merge"
-  puts "a   = #{a.inspect}"
-  puts "aux = #{aux.inspect}"
-  puts
+  end
 
   level += 1
 end
 
 def merge!(a, lo, mid, hi, aux, &block)
-  i = lo
-  j = mid + 1
-#  (lo..hi).each do |x|
-#    aux[x] = a[x]
-#  end
+  # Return if merging single element
   if hi <= lo
     return
   end
 
+  i = lo
+  j = mid + 1
+
   (lo..hi).each do |x|
-   # puts "a[i] = #{block.call(a[i])}"
-   # puts "a[j] = #{block.call(a[j])}"
     if i > mid
       aux[x] = a[j]
       j += 1
@@ -171,11 +120,9 @@ def merge!(a, lo, mid, hi, aux, &block)
       i += 1
     end
   end
-  #a
-  #a, aux = aux, a
 end
 
-a = (0...9).to_a.shuffle
+a = (0...32).to_a.shuffle
 puts a.inspect
 puts sorted?(a)
 merge_sort!(a)
@@ -188,4 +135,3 @@ b = [['Vasya', 1], ['Petya', 3], ['Kolya', 2]]
 puts b.inspect
 merge_sort!(b) { |item| -item[1] }
 puts "result:" + "\n" + b.inspect # [["Petya", 3], ["Kolya", 2], ["Vasya", 1]]
-
