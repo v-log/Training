@@ -27,6 +27,7 @@ def merge_sort!(a, cutoff = 16, &block)
   (0...a.length).each do |x|
     a[x] = aux[x]
   end
+  a.to_a
 end
 
 private
@@ -35,7 +36,7 @@ def levels(array)
   # Count source array depth to set the 
   # right initial position
 
-  #The first level is there whatever the case
+  # The first level is there whatever the case
   levels = 1
   pow_of_2 = 1
 
@@ -56,7 +57,8 @@ def merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
   if hi - lo + 1 <= cutoff
     # Set the right position of source and
     # destination arrays depending on level parity
-    # (need this due to improvement 3)
+    # (need this due to improvement 3 - change
+    # between source and destination areays)
     if level.even?
       insertion_sort_2!(aux, lo, hi, a, &block)
     else
@@ -73,7 +75,7 @@ def merge_sort_hlpr!(a, lo, hi, aux, level, cutoff, &block)
     # supposed to appear at bottom level, will
     # do one level higher, which means it must be
     # merged with something, but there is nil.
-    # We omit this merge by copying only existing
+    # We omit this merge by only copying existing
     # element.
     aux[lo] = a[lo] if level != 0
     level += 1
