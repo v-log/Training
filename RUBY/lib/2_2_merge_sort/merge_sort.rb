@@ -39,19 +39,29 @@ def merge_sort_bu!(a, &block)
   while sz < n do
     0.step(n - sz, 2 * sz) do |lo|
       hi = less(lo + sz + sz - 1, n - 1)
+
+      # If array size is odd, there is one last 
+      # element which has no pair, i.e. it has
+      # nothing to merge with. We thus need to 
+      # manually copy this single element
       if a[a.size - 1] == nil && a[a.size - 2] != nil
         a[lo] = aux[lo]
       elsif aux[aux.size - 1] == nil && aux[aux.size - 2] != nil
         aux[lo] = a[lo]
       else
+        # Normal merge for non-nil elements
+        mid = lo + sz - 1
         if block_given?
-          merge!(a, lo, lo + sz - 1, hi, aux, &block)
+          merge!(a, lo, mid, hi, aux, &block)
         else
-          merge!(a, lo, lo + sz - 1, hi, aux) { |x| x }
+          merge!(a, lo, mid, hi, aux) { |x| x }
         end
       end
     end
     sz += sz
+    
+    # Improvement 3 - change between arrays
+    # in order to avoid unnecessary data copy
     a, aux = aux, a
   end
 
