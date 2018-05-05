@@ -30,7 +30,44 @@ def merge_sort!(a, cutoff = 16, &block)
   a.to_a
 end
 
+def merge_sort_bu!(a, &block)
+  return a if a.size <= 1
+  n = a.length
+  aux = Array.new(n)
+  sz = 1
+
+  while sz < n do
+    0.step(n - sz, 2 * sz) do |lo|
+      hi = less(lo + sz + sz - 1, n - 1)
+      if a[a.size - 1] == nil && a[a.size - 2] != nil
+        a[lo] = aux[lo]
+      elsif aux[aux.size - 1] == nil && aux[aux.size - 2] != nil
+        aux[lo] = a[lo]
+      else
+        if block_given?
+          merge!(a, lo, lo + sz - 1, hi, aux, &block)
+        else
+          merge!(a, lo, lo + sz - 1, hi, aux) { |x| x }
+        end
+      end
+    end
+    sz += sz
+    a, aux = aux, a
+  end
+
+  # Duplicate arrays in case we get to return
+  # the unsorted one after the last merge 
+  (0...a.length).each do |x|
+    aux[x] = a[x]
+  end
+  a.to_a
+end
+
 private
+
+def less(a, b)
+  a < b ? a : b
+end
 
 def levels(array)
   # Count source array depth to set the 
@@ -124,10 +161,10 @@ def merge!(a, lo, mid, hi, aux, &block)
   end
 end
 
-a = (0...32).to_a.shuffle
+a = (0...7).to_a.shuffle
 puts a.inspect
 puts sorted?(a)
-merge_sort!(a)
+merge_sort_bu!(a)
 puts a.inspect
 raise unless sorted?(a)
 puts "result:" + "\n" + a.inspect
