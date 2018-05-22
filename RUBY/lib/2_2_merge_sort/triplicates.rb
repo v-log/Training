@@ -34,7 +34,7 @@ private
 # Explicit method to define min element
 # in the array with nil elements
 def min_with_nils(list)
-  # Minimum's initial value
+  # Minimum initial value
   min = ""
 
   # Set the existing (in the array) initial
@@ -68,12 +68,12 @@ end
 # of those;
 #
 # In the list with min element move on to
-# the next element getting next trinity of
+# the next element getting next set of
 # elements, where find min element, and
 # so on, until 3 equal min elements found.
 #
 # To eliminate the case, when duplicates
-# in one list might be defined common elements,
+# in one list might be defined as common elements,
 # there is a skipping stage, checking if next
 # element after current min is equal to min,
 # and if so, incrementing the list's index.
@@ -141,12 +141,12 @@ def find_common_elem(given_lists)
     # Update previous element
     prev_min = curr_min
 
-    # Exit when first three equal elements
-    # in different arrays are found
+    # Exit when first m (m - number of lists given)
+    # equal elements in different lists are found
     return curr_min if eql_elems == given_lists.size
   end
 
-  # If no triplicates found
+  # If no common elements found
   nil
 end
 
