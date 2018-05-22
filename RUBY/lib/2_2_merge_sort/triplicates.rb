@@ -1,8 +1,9 @@
 require_relative 'merge_sort'
 
-# Public: Determine if there is any element 
-# common to all given lists of Comparable
-# elements, and if so, return first such element.
+# Public: Determine if there is any element
+# common to all given lists (case-sensitive)
+# of Comparable elements, and if so, return
+# first such element.
 #
 # lists - Zero or more lists to search for triplicate in
 #
@@ -23,10 +24,10 @@ def common_elem(*lists)
   lists.each do |list|
     merge_sort!(list)
   end
-  
+
   # Find first common element in sorted lists
   find_common_elem(lists)
-end 
+end
 
 private
 
@@ -46,14 +47,14 @@ def min_with_nils(list)
       min = elem
       break
     end
-  end  
+  end
 
   # Find minimum element
   list.each do |elem|
     next if elem == nil
     min = elem if elem < min
   end
-  
+
   # Return min if found
   return min if min != ""
 
@@ -89,7 +90,7 @@ def find_common_elem(given_lists)
   # Previous minimum initial value
   prev_min = ""
 
-  
+
   lists_total_size.times do
     # Take first elements of sorted lists
     # and find min out of those
@@ -106,7 +107,7 @@ def find_common_elem(given_lists)
     # Current min element out of all lists
     curr_min = min_with_nils(curr_min_elems)
     return nil if curr_min == nil
-    
+
     # In a list with min element found inc the index
     # while elements after min are equal to min
     # (to eliminate counting duplicates in one list
@@ -116,7 +117,7 @@ def find_common_elem(given_lists)
 
       # Define the list containing min element
       if elem == curr_min
-        
+
         # List with min element (for readability)
         list = given_lists[list_number]
 
@@ -130,7 +131,7 @@ def find_common_elem(given_lists)
       end
     end
 
-    # Count equal elements    
+    # Count equal elements
     if curr_min == prev_min
       eql_elems += 1
     else
