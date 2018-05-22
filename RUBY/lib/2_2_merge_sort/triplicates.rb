@@ -5,9 +5,10 @@ require_relative 'merge_sort'
 # of Comparable elements, and if so, return
 # first such element.
 #
-# lists - Zero or more lists to search for triplicate in
+# lists - Zero or more lists to search for
+# common element in.
 #
-# Exapmles
+# Examples
 #
 #   a = ["ccc", "aaa", "bbb"]
 #   b = ["kkk", "bbb", "jjj"]
@@ -31,7 +32,7 @@ end
 
 private
 
-# Explicit method to define min element
+# Explicit method to determine min element
 # in the array with nil elements
 def min_with_nils(list)
   # Minimum initial value
