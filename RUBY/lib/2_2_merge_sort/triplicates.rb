@@ -32,41 +32,9 @@ end
 
 private
 
-# Explicit method to determine min element
-# in the array with nil elements
-def min_with_nils(list)
-  # Minimum initial value
-  min = ""
-
-  # Set the existing (in the array) initial
-  # value for minimum (in order to be able
-  # to use classic algorithm of finding minimum)
-  list.each do |elem|
-    if elem == nil
-      next
-    else
-      min = elem
-      break
-    end
-  end
-
-  # Find minimum element
-  list.each do |elem|
-    next if elem == nil
-    min = elem if elem < min
-  end
-
-  # Return min if found
-  return min if min != ""
-
-  # Return nil if no min found
-  # (i.e. all elements are nils)
-  nil
-end
-
 # Having all lists sorted, take first
 # elements of each list, find min element
-# of those;
+# of those.
 #
 # In the list with min element move on to
 # the next element getting next set of
@@ -106,7 +74,7 @@ def find_common_elem(given_lists)
     end
 
     # Current min element out of all lists
-    curr_min = min_with_nils(curr_min_elems)
+    curr_min = curr_min_elems.reject(&:nil?).min
     return nil if curr_min == nil
 
     # In a list with min element found inc the index
