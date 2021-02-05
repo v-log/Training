@@ -23,34 +23,34 @@ class InsertionSortTest < Minitest::Test
     assert_equal @sorted_ary, insertion_sort!(@unsorted_ary)
   end
 
-  def test_insertion_sort_with_random_aryay
+  def test_insertion_sort_with_rand_ary
     rand_ary_1 = (0...100).to_a.shuffle
     rand_ary_2 = rand_ary_1.dup
     assert_equal rand_ary_1.sort, insertion_sort!(rand_ary_2)
   end
 
-  # Testing #insertion_sort2!
-  def test_insertion_sort2_without_block
-    assert_equal @sorted_ary, insertion_sort2!(@unsorted_ary)
+  # Testing #insertion_sort_2!
+  def test_insertion_sort_2_without_block
+    assert_equal @sorted_ary, insertion_sort_2!(@unsorted_ary)
   end
 
-  def test_insertion_sort2_without_block_with_rand_ary
+  def test_insertion_sort_2_without_block_with_rand_ary
     rand_ary_1 = (0...100).to_a.shuffle
     rand_ary_2 = rand_ary_1.dup
-    assert_equal rand_ary_1.sort, insertion_sort2!(rand_ary_2)
+    assert_equal rand_ary_1.sort, insertion_sort_2!(rand_ary_2)
   end
 
-  def test_insertion_sort2_with_block
-    insertion_sort2!(@unsorted_hash) { |item| -item[1] }
+  def test_insertion_sort_2_with_block
+    insertion_sort_2!(@unsorted_hash) { |item| -item[1] }
     assert_equal @sorted_hash, @unsorted_hash
   end
 
-  def test_insertion_sort2_with_block_with_rand_ary
+  def test_insertion_sort_2_with_block_with_rand_ary
     permutation = (0...100).to_a.shuffle
     pairs = (0...permutation.size).map { |i| [i, permutation[i]] }
     pairs_copy = pairs.dup
     pairs.sort_by! { |item| -item[1] }
-    insertion_sort2!(pairs_copy) { |item| -item[1] }
+    insertion_sort_2!(pairs_copy) { |item| -item[1] }
     assert_equal(pairs, pairs_copy)
   end
 end
